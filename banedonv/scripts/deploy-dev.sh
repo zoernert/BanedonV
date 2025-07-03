@@ -3,7 +3,7 @@ set -e # Exit immediately if a command exits with a non-zero status.
 
 # --- Configuration ---
 DEV_SERVER="root@10.0.0.14"
-APP_DIR="/opt/banedonv"
+APP_DIR="/opt/banedonv/banedonv"
 CHANGELOG_FILE="CHANGELOG.md"
 
 # --- Functions ---

@@ -3,16 +3,16 @@ set -e
 
 # This script sets up the necessary directory structure for BanedonV local storage.
 
-STORAGE_BASE="/opt/banedonv/storage"
+STORAGE_BASE="/opt/banedonv/banedonv/storage"
 
 DIRECTORIES=(
   "$STORAGE_BASE/files"
   "$STORAGE_BASE/processed"
   "$STORAGE_BASE/thumbnails"
   "$STORAGE_BASE/temp"
-  "/opt/banedonv/logs"
-  "/opt/banedonv/backups"
-  "/opt/banedonv/config"
+  "/opt/banedonv/banedonv/logs"
+  "/opt/banedonv/banedonv/backups"
+  "/opt/banedonv/banedonv/config"
 )
 
 echo "Creating BanedonV directory structure..."
