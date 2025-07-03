@@ -1,6 +1,6 @@
 import { Router, Request } from 'express';
 import multer from 'multer';
-import { FileProcessorService } from '../../file-service/src/file-processor.service';
+import { FileProcessorService } from '../../../file-service/src/file-processor.service';
 
 interface MulterRequest extends Request {
   file?: Express.Multer.File;

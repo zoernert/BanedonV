@@ -1,6 +1,6 @@
-import { QdrantService } from '@banedonv/apps/vector-service/src/qdrant.service';
-import { EmbeddingService } from '@banedonv/apps/vector-service/src/embedding.service';
-import { CacheService } from '@banedonv/shared/src/cache.service';
+import { QdrantService } from '../../../apps/vector-service/src/qdrant.service';
+import { EmbeddingService } from '../../../apps/vector-service/src/embedding.service';
+import { CacheService } from '../../shared/src/cache.service';
 
 // Define placeholder types for results
 type VectorResults = any;
@@ -49,5 +49,10 @@ export class UnifiedSearchService {
 
   async cacheSearch(key: string, results: any): Promise<void> {
     await this.cacheService.set(key, JSON.stringify(results), 3600);
+  }
+
+  async deleteCollection(fileId: string): Promise<void> {
+    // Delete from Qdrant
+    await this.qdrantService.deletePoints('my_collection', [fileId]);
   }
 }

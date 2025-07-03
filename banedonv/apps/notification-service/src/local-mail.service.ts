@@ -1,17 +1,17 @@
 import nodemailer from 'nodemailer';
-import { config } from '@banedonv/shared/src/config';
+import { config } from '../../../libs/shared/src/config';
 
 export class LocalMailService {
   private transporter;
 
   constructor() {
     this.transporter = nodemailer.createTransport({
-      host: config.smtp.host,
-      port: config.smtp.port,
+      host: config.SMTP_HOST,
+      port: config.SMTP_PORT,
       secure: false,
       auth: {
-        user: config.smtp.user,
-        pass: config.smtp.pass,
+        user: config.SMTP_USER,
+        pass: config.SMTP_PASS,
       },
     });
   }
