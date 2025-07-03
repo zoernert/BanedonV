@@ -19,3 +19,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implemented Phase 8: Production - Created production deployment scripts and initial Kubernetes manifests.
 - Fixed folder structure - Consolidated duplicate banedonV/banedonv directories into single banedonv directory.
 - Added missing foundational files - Created apps/api-gateway/src/app.ts, apps/auth-service/src/auth.service.ts, and libs/shared/src/config.ts to complete Phase 1 requirements.
+- Fixed build configuration - Added tsconfig.build.json and corrected deployment script paths for proper directory structure.
