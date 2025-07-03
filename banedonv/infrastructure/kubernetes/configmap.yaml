@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: banedonv-config
+data:
+  QDRANT_URL: "http://qdrant-service:6333"
+  REDIS_URL: "redis://redis-service:6379"
+  FILE_STORAGE_PATH: "/opt/banedonv/storage"
+  SMTP_HOST: "postfix-service"
+  SMTP_PORT: "587"

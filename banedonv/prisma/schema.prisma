@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Core Models
+model Tenant {
+  id        String   @id @default(uuid())
+  name      String
+  subdomain String   @unique
+  users     User[]
+}
+
+model User {
+  id          String       @id @default(uuid())
+  tenantId    String
+  email       String       @unique
+  tenant      Tenant       @relation(fields: [tenantId], references: [id])
+  tier        UserTier     @default(FREE)
+  collections Collection[]
+  files       File[]
+}
+
+model Collection {
+  id     String @id @default(uuid())
+  name   String
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  files  File[]
+}
+
+model File {
+  id              String     @id @default(uuid())
+  originalName    String
+  markdownContent String?
+  filePath        String? // Local filesystem path
+  chunks          FileChunk[]
+  status          FileStatus @default(PROCESSING)
+  collectionId    String?
+  collection      Collection? @relation(fields: [collectionId], references: [id])
+  userId          String?
+  user            User?       @relation(fields: [userId], references: [id])
+}
+
+model FileChunk {
+  id        String   @id @default(uuid())
+  content   String
+  embedding Float[]
+  metadata  Json     @default("{}")
+  fileId    String
+  file      File     @relation(fields: [fileId], references: [id])
+}
+
+enum UserTier {
+  FREE
+  PRO
+  ULTRA
+  UNLIMITED
+}
+
+enum FileStatus {
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  level     String
+  message   String
+  userId    String?
+  details   String?
+  createdAt DateTime @default(now())
+}
