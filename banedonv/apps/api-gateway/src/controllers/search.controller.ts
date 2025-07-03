@@ -4,7 +4,7 @@ import { UnifiedSearchService } from '../../../../libs/search/src/unified-search
 const router = Router();
 const searchService = new UnifiedSearchService();
 
-router.post('/search', async (req, res) => {
+router.post('/', async (req, res) => {
   const { query } = req.body;
   const results = await searchService.hybridSearch(query);
   res.json(results);
