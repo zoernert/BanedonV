@@ -1,11 +1,11 @@
 import Stripe from 'stripe';
-import { config } from '@banedonv/shared/src/config';
+import { config } from '../../../libs/shared/src/config';
 
 export class StripeService {
   private stripe: Stripe;
 
   constructor() {
-    this.stripe = new Stripe(config.stripeSecretKey || '', {
+    this.stripe = new Stripe(config.STRIPE_SECRET_KEY || '', {
       apiVersion: '2023-10-16',
     });
   }

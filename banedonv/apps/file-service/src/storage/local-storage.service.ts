@@ -1,12 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { config } from '@banedonv/shared/src/config';
+import { config } from '../../../../libs/shared/src/config';
 
 export class LocalStorageService {
   private uploadPath: string;
 
   constructor() {
-    this.uploadPath = config.fileStoragePath || '/opt/banedonv/storage/files';
+    this.uploadPath = config.FILE_STORAGE_PATH || '/opt/banedonv/storage/files';
     if (!fs.existsSync(this.uploadPath)) {
       fs.mkdirSync(this.uploadPath, { recursive: true });
     }

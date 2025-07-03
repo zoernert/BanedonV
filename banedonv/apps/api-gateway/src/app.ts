@@ -1,7 +1,7 @@
 import express from 'express';
-import { securityHeaders, limiter } from '@libs/shared/src/security.middleware';
-import { searchController } from './controllers/search.controller';
-import { fileController } from './controllers/file.controller';
+import { securityHeaders, limiter } from '../../../libs/shared/src/security.middleware';
+import searchController from './controllers/search.controller';
+import fileController from './controllers/file.controller';
 
 const app = express();
 const PORT = process.env.PORT || 3000;

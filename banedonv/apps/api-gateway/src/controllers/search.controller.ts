@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { UnifiedSearchService } from '@banedonv/search/src/unified-search.service';
+import { UnifiedSearchService } from '../../../../libs/search/src/unified-search.service';
 
 const router = Router();
 const searchService = new UnifiedSearchService();
