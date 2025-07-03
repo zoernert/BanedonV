@@ -49,4 +49,11 @@ export class QdrantService {
       points: pointIds,
     });
   }
+
+  async upsertPoints(collectionName: string, points: any[]) {
+    return this.client.upsert(collectionName, {
+      wait: true,
+      points: points
+    });
+  }
 }

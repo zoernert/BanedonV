@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+- Complete end-to-end file processing pipeline - Files are now fully processed, embedded, and indexed in Qdrant vector database.
+- Working file upload API - Fixed multer configuration and file handling with proper validation and storage.
+- Semantic search with real document indexing - Search API now returns actual results from uploaded documents with similarity scores.
+- UUID-based point indexing - Fixed Qdrant point ID format to use proper UUIDs for document chunks.
+- Enhanced file processor service - Added complete file reading, embedding generation, and vector indexing pipeline.
+
 ## [1.0.0] - 2025-07-04
 
 ### Added

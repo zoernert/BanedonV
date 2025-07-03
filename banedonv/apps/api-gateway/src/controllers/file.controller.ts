@@ -9,7 +9,30 @@ interface MulterRequest extends Request {
 const router = Router();
 const fileProcessorService = new FileProcessorService();
 
-router.post('/upload', async (req: MulterRequest, res) => {
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, '/tmp/uploads/');
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: { fileSize: 100 * 1024 * 1024 }, // 100MB limit
+  fileFilter: (req, file, cb) => {
+    const allowedTypes = ['text/plain', 'application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+    if (allowedTypes.includes(file.mimetype)) {
+      cb(null, true);
+    } else {
+      cb(new Error('Invalid file type'));
+    }
+  }
+});
+
+router.post('/upload', upload.single('file'), async (req: MulterRequest, res) => {
   if (!req.file) {
     return res.status(400).json({ error: 'No file uploaded' });
   }
