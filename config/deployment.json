@@ -1,0 +1,143 @@
+{
+  "deployment": {
+    "strategy": "single-port",
+    "port": 3001,
+    "environments": {
+      "development": {
+        "server": {
+          "host": "10.0.0.14",
+          "port": 3001,
+          "user": "root",
+          "path": "/opt/banedonv"
+        },
+        "build": {
+          "frontend": {
+            "command": "npm run build:frontend",
+            "output": "./dist/frontend"
+          },
+          "backend": {
+            "command": "npm run build:backend",
+            "output": "./dist"
+          }
+        },
+        "deploy": {
+          "files": [
+            "dist/",
+            "package.json",
+            "package-lock.json",
+            "ecosystem.config.js"
+          ],
+          "exclude": [
+            "node_modules/",
+            "src/",
+            ".git/",
+            ".env*",
+            "*.log"
+          ]
+        },
+        "process": {
+          "manager": "pm2",
+          "name": "banedonv-dev",
+          "restart": "always",
+          "instances": 1
+        }
+      },
+      "production": {
+        "server": {
+          "host": "10.0.0.2",
+          "port": 3001,
+          "user": "root",
+          "path": "/opt/banedonv"
+        },
+        "build": {
+          "frontend": {
+            "command": "npm run build:frontend",
+            "output": "./dist/frontend"
+          },
+          "backend": {
+            "command": "npm run build:backend",
+            "output": "./dist"
+          }
+        },
+        "deploy": {
+          "files": [
+            "dist/",
+            "package.json",
+            "package-lock.json",
+            "ecosystem.config.js"
+          ],
+          "exclude": [
+            "node_modules/",
+            "src/",
+            ".git/",
+            ".env*",
+            "*.log"
+          ]
+        },
+        "process": {
+          "manager": "pm2",
+          "name": "banedonv-prod",
+          "restart": "always",
+          "instances": 2
+        },
+        "ssl": {
+          "enabled": true,
+          "cert": "/etc/ssl/certs/banedonv.crt",
+          "key": "/etc/ssl/private/banedonv.key"
+        }
+      }
+    }
+  },
+  "servers": {
+    "development": {
+      "host": "10.0.0.14",
+      "user": "root",
+      "port": 22,
+      "deployPath": "/opt/banedonv",
+      "nodeVersion": "18.x",
+      "pm2Config": "ecosystem.config.js",
+      "nginx": {
+        "enabled": false,
+        "configPath": "/etc/nginx/sites-available/banedonv-dev"
+      },
+      "ssl": {
+        "enabled": false
+      },
+      "backup": {
+        "enabled": true,
+        "path": "/opt/banedonv/backups"
+      }
+    },
+    "production": {
+      "host": "10.0.0.2",
+      "user": "root",
+      "port": 22,
+      "deployPath": "/opt/banedonv",
+      "nodeVersion": "18.x",
+      "pm2Config": "ecosystem.config.js",
+      "nginx": {
+        "enabled": false,
+        "configPath": "/etc/nginx/sites-available/banedonv-prod"
+      },
+      "ssl": {
+        "enabled": true,
+        "certPath": "/etc/letsencrypt/live/banedonv.com"
+      },
+      "backup": {
+        "enabled": true,
+        "path": "/opt/banedonv/backups",
+        "schedule": "0 2 * * *"
+      }
+    }
+  },
+  "healthCheck": {
+    "enabled": true,
+    "endpoint": "/health",
+    "timeout": 30000,
+    "retries": 3
+  },
+  "rollback": {
+    "enabled": true,
+    "keepReleases": 5
+  }
+}

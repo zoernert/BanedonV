@@ -1,0 +1,51 @@
+{
+  "development": {
+    "local": {
+      "host": "localhost",
+      "port": 3001,
+      "protocol": "http",
+      "baseUrl": "http://localhost:3001",
+      "apiPath": "/api/v1",
+      "frontendPath": "/",
+      "description": "Local development environment - single port"
+    },
+    "remote": {
+      "host": "10.0.0.14",
+      "port": 3001,
+      "protocol": "http",
+      "baseUrl": "http://10.0.0.14:3001",
+      "apiPath": "/api/v1",
+      "frontendPath": "/",
+      "user": "root",
+      "deployPath": "/opt/banedonv",
+      "description": "Remote development server - single port",
+      "features": {
+        "hotReload": true,
+        "debugging": true,
+        "logging": "verbose",
+        "mockData": true,
+        "corsRequired": false
+      }
+    }
+  },
+  "production": {
+    "host": "10.0.0.2",
+    "port": 3001,
+    "protocol": "https",
+    "baseUrl": "https://10.0.0.2:3001",
+    "apiPath": "/api/v1",
+    "frontendPath": "/",
+    "user": "root",
+    "deployPath": "/opt/banedonv",
+    "description": "Production server - single port",
+    "features": {
+      "hotReload": false,
+      "debugging": false,
+      "logging": "error",
+      "mockData": false,
+      "ssl": true,
+      "monitoring": true,
+      "corsRequired": false
+    }
+  }
+}

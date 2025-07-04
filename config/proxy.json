@@ -1,0 +1,39 @@
+{
+  "routing": {
+    "strategy": "single-port",
+    "port": 3001,
+    "routes": {
+      "api": {
+        "path": "/api/*",
+        "handler": "express-api",
+        "description": "API routes handled by Express middleware"
+      },
+      "health": {
+        "path": "/health",
+        "handler": "express-api",
+        "description": "Health check endpoint"
+      },
+      "metrics": {
+        "path": "/metrics",
+        "handler": "express-api",
+        "description": "Metrics endpoint"
+      },
+      "frontend": {
+        "path": "/*",
+        "handler": "static-files",
+        "fallback": "index.html",
+        "directory": "./dist/frontend",
+        "description": "Frontend static files with SPA fallback"
+      }
+    }
+  },
+  "middleware": {
+    "order": [
+      "logging",
+      "cors-disabled",
+      "body-parser",
+      "api-routes",
+      "static-files"
+    ]
+  }
+}
