@@ -23,9 +23,29 @@ declare global {
 
 export class AuthMiddleware {
   /**
-   * Authentication middleware factory
+   * Simple mock authentication middleware for development
+   * This bypasses real authentication and creates a mock user
    */
-  static authenticate(authService: IAuthService) {
+  static mockAuthenticate(req: Request, res: Response, next: NextFunction): void {
+    // Mock user for development
+    req.user = {
+      id: 'user_1',
+      email: 'user@example.com',
+      name: 'Mock User',
+      role: 'user',
+      active: true,
+      lastLogin: new Date(Date.now() - 86400000).toISOString(),
+      createdAt: new Date(Date.now() - 86400000 * 30).toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+    logAuth('mock_auth_success', req.user.id, true, { url: req.originalUrl });
+    next();
+  }
+
+  /**
+   * Authentication middleware factory (for dependency injection)
+   */
+  static authenticateWithService(authService: IAuthService) {
     return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
       const authHeader = req.headers.authorization;
 

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.0] - 2025-07-06
+
+### Changed
+- **Frontend Refactoring**: Consolidated all file management functionality under a unified "Collections" feature, removing the separate "Files" section to streamline the user experience.
+- **Navigation and Routing**: Updated the frontend navigation and routing to reflect the new "Collections" focus.
+- **Mock Backend Data**: Aligned the mock backend to provide realistic, named collections and files, ensuring data consistency with the frontend's expectations.
+
+### Fixed
+- **Authentication Middleware**: Corrected the backend authentication middleware to support mock authentication during development, unblocking frontend progress and testing.
+
+### Added
+- **Collections Pages**: Created a full suite of frontend pages for collections, including an overview, detailed views, and file lists.
+- **UI Components**: Implemented a new `Badge` UI component and added missing icons to support the updated design.
+
 ## [1.3.0] - 2025-07-05
 
 ### Changed
