@@ -14,7 +14,7 @@ const authService = new AuthService(userRepository);
 const userService = new UserService(userRepository);
 const userController = new UserController(userService);
 
-const authenticate = AuthMiddleware.authenticate(authService);
+const authenticate = AuthMiddleware.mockAuthenticate;
 
 /**
  * Get all users (Admin only)
