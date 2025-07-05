@@ -4,10 +4,11 @@
  */
 
 import request from 'supertest';
-import App from '../src/app';
+import { App } from '../src/app';
+import { Express } from 'express';
 
 describe('Health Routes', () => {
-  let app: any;
+  let app: Express;
 
   beforeAll(() => {
     const appInstance = new App();

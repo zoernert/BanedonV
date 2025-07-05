@@ -21,7 +21,7 @@ export class UserController extends BaseController {
   async getUserById(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      const user = await this.userService.getUserById(id);
+      const user = await this.userService.getUserById(id!);
       if (!user) {
         return ResponseUtil.notFound(res);
       }
@@ -35,7 +35,7 @@ export class UserController extends BaseController {
     try {
       const { id } = req.params;
       const userDto: UpdateUserDto = req.body;
-      await this.executeWithDelay(() => this.userService.updateUser(id, userDto), res, 'User updated successfully');
+      await this.executeWithDelay(() => this.userService.updateUser(id!, userDto), res, 'User updated successfully');
     } catch (error) {
       this.handleError(error as Error, next);
     }
@@ -44,7 +44,7 @@ export class UserController extends BaseController {
   async deleteUser(req: Request, res: Response, next: NextFunction): Promise<void> {
     try {
       const { id } = req.params;
-      await this.executeWithDelay(() => this.userService.deleteUser(id, req.user!), res, 'User deleted successfully');
+      await this.executeWithDelay(() => this.userService.deleteUser(id!, req.user!), res, 'User deleted successfully');
     } catch (error)
  {
       this.handleError(error as Error, next);
@@ -64,7 +64,7 @@ export class UserController extends BaseController {
     try {
       const { id } = req.params;
       const { role } = req.body;
-      await this.executeWithDelay(() => this.userService.updateUserRole(id, role, req.user!), res, 'User role updated successfully');
+      await this.executeWithDelay(() => this.userService.updateUserRole(id!, role, req.user!), res, 'User role updated successfully');
     } catch (error) {
       this.handleError(error as Error, next);
     }
@@ -74,7 +74,7 @@ export class UserController extends BaseController {
     try {
       const { id } = req.params;
       const pagination = ResponseUtil.parsePagination(req.query);
-      await this.executeWithPagination(() => this.userService.getUserActivity(id, pagination), res, 'User activity retrieved successfully');
+      await this.executeWithPagination(() => this.userService.getUserActivity(id!, pagination), res, 'User activity retrieved successfully');
     } catch (error) {
       this.handleError(error as Error, next);
     }

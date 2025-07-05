@@ -1,39 +1,25 @@
 import request from 'supertest';
-import App from '../src/app';
+import { App } from '../src/app';
 import { Express } from 'express';
-import { AuthMiddleware, AuthUser } from '../src/middleware/auth';
-import { mockUsers } from '../src/config/auth';
 
 describe('Search Routes', () => {
   let app: Express;
   let token: string;
   let adminToken: string;
   
-  beforeAll(() => {
+  beforeAll(async () => {
     const server = new App();
     app = server.getApp();
     
-    const adminMockUser = mockUsers.find(u => u.role === 'admin')!;
-    const adminUser: AuthUser = {
-        id: adminMockUser.id,
-        email: adminMockUser.email,
-        name: adminMockUser.name,
-        role: adminMockUser.role as 'admin',
-        active: adminMockUser.active,
-        createdAt: adminMockUser.createdAt
-    };
-    adminToken = AuthMiddleware.generateToken(adminUser);
+    const adminLoginRes = await request(app)
+      .post('/api/v1/auth/login')
+      .send({ email: 'admin@banedonv.com', password: 'admin123' });
+    adminToken = adminLoginRes.body.data.token;
 
-    const regularMockUser = mockUsers.find(u => u.role === 'user')!;
-    const regularUser: AuthUser = {
-      id: regularMockUser.id,
-      email: regularMockUser.email,
-      name: regularMockUser.name,
-      role: regularMockUser.role as 'user',
-      active: regularMockUser.active,
-      createdAt: regularMockUser.createdAt
-    };
-    token = AuthMiddleware.generateToken(regularUser);
+    const userLoginRes = await request(app)
+      .post('/api/v1/auth/login')
+      .send({ email: 'user@banedonv.com', password: 'user123' });
+    token = userLoginRes.body.data.token;
   });
   
   describe('GET /api/v1/search', () => {
