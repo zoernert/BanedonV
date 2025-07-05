@@ -1,30 +1,39 @@
-import request from 'supertest';
+import supertest from 'supertest';
 import { App } from '../src/app';
 import { Express } from 'express';
+import { Server } from 'http';
 
 describe('Search Routes', () => {
   let app: Express;
+  let server: Server;
+  let request: supertest.SuperTest<supertest.Test>;
   let token: string;
   let adminToken: string;
   
   beforeAll(async () => {
-    const server = new App();
-    app = server.getApp();
+    const appInstance = new App();
+    app = appInstance.getApp();
+    server = app.listen();
+    request = supertest(server);
     
-    const adminLoginRes = await request(app)
+    const adminLoginRes = await request
       .post('/api/v1/auth/login')
       .send({ email: 'admin@banedonv.com', password: 'admin123' });
     adminToken = adminLoginRes.body.data.token;
 
-    const userLoginRes = await request(app)
+    const userLoginRes = await request
       .post('/api/v1/auth/login')
       .send({ email: 'user@banedonv.com', password: 'user123' });
     token = userLoginRes.body.data.token;
   });
+
+  afterAll((done) => {
+    server.close(done);
+  });
   
   describe('GET /api/v1/search', () => {
     it('should return 422 if query parameter is missing', async () => {
-      const res = await request(app)
+      const res = await request
         .get('/api/v1/search')
         .set('Authorization', `Bearer ${token}`);
       
@@ -33,7 +42,7 @@ describe('Search Routes', () => {
     });
 
     it('should return 200 with search results for a valid query', async () => {
-      const res = await request(app)
+      const res = await request
         .get('/api/v1/search?q=test')
         .set('Authorization', `Bearer ${token}`);
       
@@ -43,7 +52,7 @@ describe('Search Routes', () => {
     });
 
     it('should respect pagination parameters', async () => {
-      const res = await request(app)
+      const res = await request
         .get('/api/v1/search?q=test&page=2&limit=5')
         .set('Authorization', `Bearer ${token}`);
 
@@ -54,7 +63,7 @@ describe('Search Routes', () => {
     });
 
     it('should filter results by type', async () => {
-        const res = await request(app)
+        const res = await request
           .get('/api/v1/search?q=test&type=file')
           .set('Authorization', `Bearer ${token}`);
   
@@ -67,7 +76,7 @@ describe('Search Routes', () => {
 
   describe('GET /api/v1/search/suggestions', () => {
     it('should return 422 if query parameter is missing', async () => {
-      const res = await request(app)
+      const res = await request
         .get('/api/v1/search/suggestions')
         .set('Authorization', `Bearer ${token}`);
       
@@ -76,7 +85,7 @@ describe('Search Routes', () => {
     });
 
     it('should return suggestions for a valid query', async () => {
-      const res = await request(app)
+      const res = await request
         .get('/api/v1/search/suggestions?q=hello')
         .set('Authorization', `Bearer ${token}`);
 
@@ -89,7 +98,7 @@ describe('Search Routes', () => {
 
   describe('GET /api/v1/search/filters', () => {
     it('should return a list of available filters', async () => {
-      const res = await request(app)
+      const res = await request
         .get('/api/v1/search/filters')
         .set('Authorization', `Bearer ${token}`);
 

@@ -52,7 +52,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.message).toBe('Invalid credentials');
+      expect(response.body.error.message).toBe('Invalid email or password');
     });
 
     it('should fail with non-existent user', async () => {
@@ -65,7 +65,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.message).toBe('Invalid credentials');
+      expect(response.body.error.message).toBe('Invalid email or password');
     });
 
     it('should fail with missing email', async () => {
@@ -279,7 +279,7 @@ describe('Authentication Routes', () => {
         .expect(400);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.error.message).toBe('Invalid or expired reset token');
+      expect(response.body.error.message).toBe('Invalid or expired token');
     });
   });
 });
