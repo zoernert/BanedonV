@@ -3,22 +3,25 @@
  * Comprehensive testing for authentication endpoints
  */
 
-import { describe, it, expect, beforeEach, afterEach } from '@jest/globals';
+import { describe, it, expect, beforeAll, afterAll } from '@jest/globals';
 import supertest from 'supertest';
 import { App } from '../src/app';
 import '../tests/setup';
+import { Server } from 'http';
 
 describe('Authentication Routes', () => {
   let app: App;
   let request: supertest.SuperTest<supertest.Test>;
+  let server: Server;
 
-  beforeEach(() => {
+  beforeAll(() => {
     app = new App();
-    request = supertest(app.getApp());
+    server = app.getApp().listen(); // Start server on a random port
+    request = supertest(server);
   });
 
-  afterEach(() => {
-    // Clean up
+  afterAll((done) => {
+    server.close(done); // Properly close server after tests
   });
 
   describe('POST /api/v1/auth/login', () => {
@@ -49,7 +52,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Invalid credentials');
+      expect(response.body.error.message).toBe('Invalid credentials');
     });
 
     it('should fail with non-existent user', async () => {
@@ -62,7 +65,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Invalid credentials');
+      expect(response.body.error.message).toBe('Invalid credentials');
     });
 
     it('should fail with missing email', async () => {
@@ -71,10 +74,11 @@ describe('Authentication Routes', () => {
         .send({
           password: 'admin123'
         })
-        .expect(400);
+        .expect(422);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toContain('email');
+      expect(response.body.error.message).toBe('Validation failed');
+      expect(response.body.error.details.body[0].field).toBe('email');
     });
 
     it('should fail with missing password', async () => {
@@ -83,10 +87,11 @@ describe('Authentication Routes', () => {
         .send({
           email: 'admin@banedonv.com'
         })
-        .expect(400);
+        .expect(422);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toContain('password');
+      expect(response.body.error.message).toBe('Validation failed');
+      expect(response.body.error.details.body[0].field).toBe('password');
     });
   });
 
@@ -119,7 +124,7 @@ describe('Authentication Routes', () => {
         .expect(409);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Email already exists');
+      expect(response.body.error.message).toBe('Email already exists');
     });
   });
 
@@ -150,7 +155,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('No token provided');
+      expect(response.body.error.message).toBe('Authentication token required');
     });
   });
 
@@ -187,7 +192,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Invalid refresh token');
+      expect(response.body.error.message).toBe('Invalid refresh token');
     });
   });
 
@@ -209,9 +214,8 @@ describe('Authentication Routes', () => {
         .expect(200);
 
       expect(response.body.success).toBe(true);
-      expect(response.body.data).toHaveProperty('user');
-      expect(response.body.data.user.email).toBe('admin@banedonv.com');
-      expect(response.body.data.user.role).toBe('admin');
+      expect(response.body.data.email).toBe('admin@banedonv.com');
+      expect(response.body.data.role).toBe('admin');
     });
 
     it('should fail without token', async () => {
@@ -220,7 +224,7 @@ describe('Authentication Routes', () => {
         .expect(401);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('No token provided');
+      expect(response.body.error.message).toBe('Authentication token required');
     });
   });
 
@@ -256,8 +260,8 @@ describe('Authentication Routes', () => {
       const response = await request
         .post('/api/v1/auth/reset-password')
         .send({
-          token: 'valid-reset-token',
-          password: 'newpassword123'
+          resetToken: 'reset_somevalidtoken',
+          newPassword: 'newpassword123'
         })
         .expect(200);
 
@@ -269,13 +273,13 @@ describe('Authentication Routes', () => {
       const response = await request
         .post('/api/v1/auth/reset-password')
         .send({
-          token: 'invalid-reset-token',
-          password: 'newpassword123'
+          resetToken: 'invalid-reset-token',
+          newPassword: 'newpassword123'
         })
         .expect(400);
 
       expect(response.body.success).toBe(false);
-      expect(response.body.message).toBe('Invalid or expired reset token');
+      expect(response.body.error.message).toBe('Invalid or expired reset token');
     });
   });
 });

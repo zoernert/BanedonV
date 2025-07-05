@@ -3,11 +3,12 @@
  * User authentication and session management
  */
 
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { AuthMiddleware } from '../middleware/auth';
 import { ValidationMiddleware } from '../middleware/validation';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
+import { ErrorMiddleware } from '../middleware/error';
 
 const router = Router();
 
@@ -16,46 +17,41 @@ const router = Router();
  */
 router.post('/login', 
   ValidationMiddleware.common.validateUserLogin,
-  async (req: Request, res: Response) => {
-    try {
-      const { email, password } = req.body;
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      const user = await AuthMiddleware.authenticateUser(email, password);
       
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        const user = await AuthMiddleware.authenticateUser(email, password);
-        
-        if (!user) {
-          return ResponseUtil.unauthorized(res, 'Invalid credentials');
-        }
-        
-        const token = AuthMiddleware.generateToken(user);
-        const refreshToken = AuthMiddleware.generateRefreshToken(user);
-        
-        logger.info('User logged in successfully', {
-          userId: user.id,
-          email: user.email,
-          requestId: req.requestId
-        });
-        
-        return ResponseUtil.success(res, {
-          user: {
-            id: user.id,
-            email: user.email,
-            name: user.name,
-            role: user.role,
-            lastLogin: user.lastLogin,
-            createdAt: user.createdAt
-          },
-          token,
-          refreshToken,
-          expiresIn: '1h'
-        }, 'Login successful');
+      if (!user) {
+        return next(ErrorMiddleware.createError('Invalid credentials', 401, 'INVALID_CREDENTIALS'));
+      }
+      
+      const token = AuthMiddleware.generateToken(user);
+      const refreshToken = AuthMiddleware.generateRefreshToken(user);
+      
+      logger.info('User logged in successfully', {
+        userId: user.id,
+        email: user.email,
+        requestId: req.requestId
       });
-    } catch (error) {
-      logger.error('Login error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Login failed');
-    }
-  }
+      
+      return ResponseUtil.success(res, {
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          role: user.role,
+          lastLogin: user.lastLogin,
+          createdAt: user.createdAt
+        },
+        token,
+        refreshToken,
+        expiresIn: '1h'
+      }, 'Login successful');
+    });
+  })
 );
 
 /**
@@ -63,55 +59,50 @@ router.post('/login',
  */
 router.post('/register',
   ValidationMiddleware.common.validateUserRegistration,
-  async (req: Request, res: Response) => {
-    try {
-      const { email, password, name, role = 'user' } = req.body;
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password, name, role = 'user' } = req.body;
+    
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      // Check if user already exists
+      const existingUser = AuthMiddleware.findUserByEmail(email);
+      if (existingUser) {
+        return next(ErrorMiddleware.createError('Email already exists', 409, 'USER_EXISTS'));
+      }
       
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        // Check if user already exists
-        const existingUser = await AuthMiddleware.authenticateUser(email, 'dummy');
-        if (existingUser) {
-          return ResponseUtil.error(res, 'USER_EXISTS', 'User already exists', 400);
-        }
-        
-        // Create new user (mock)
-        const newUser = {
-          id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          email,
-          name,
-          role: role as 'admin' | 'manager' | 'user',
-          active: true,
-          createdAt: new Date().toISOString()
-        };
-        
-        const token = AuthMiddleware.generateToken(newUser);
-        const refreshToken = AuthMiddleware.generateRefreshToken(newUser);
-        
-        logger.info('User registered successfully', {
-          userId: newUser.id,
-          email: newUser.email,
-          requestId: req.requestId
-        });
-        
-        return ResponseUtil.success(res, {
-          user: {
-            id: newUser.id,
-            email: newUser.email,
-            name: newUser.name,
-            role: newUser.role,
-            createdAt: newUser.createdAt
-          },
-          token,
-          refreshToken,
-          expiresIn: '1h'
-        }, 'Registration successful', 201);
+      // Create new user (mock)
+      const newUser = {
+        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        email,
+        name,
+        role: role as 'admin' | 'manager' | 'user',
+        active: true,
+        createdAt: new Date().toISOString()
+      };
+      
+      const token = AuthMiddleware.generateToken(newUser);
+      const refreshToken = AuthMiddleware.generateRefreshToken(newUser);
+      
+      logger.info('User registered successfully', {
+        userId: newUser.id,
+        email: newUser.email,
+        requestId: req.requestId
       });
-    } catch (error) {
-      logger.error('Registration error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Registration failed');
-    }
-  }
+      
+      return ResponseUtil.success(res, {
+        user: {
+          id: newUser.id,
+          email: newUser.email,
+          name: newUser.name,
+          role: newUser.role,
+          createdAt: newUser.createdAt
+        },
+        token,
+        refreshToken,
+        expiresIn: '1h'
+      }, 'Registration successful', 201);
+    });
+  })
 );
 
 /**
@@ -119,63 +110,53 @@ router.post('/register',
  */
 router.post('/logout',
   AuthMiddleware.authenticate,
-  async (req: Request, res: Response) => {
-    try {
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        logger.info('User logged out', {
-          userId: req.user?.id,
-          requestId: req.requestId
-        });
-        
-        return ResponseUtil.success(res, null, 'Logout successful');
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      logger.info('User logged out', {
+        userId: req.user?.id,
+        requestId: req.requestId
       });
-    } catch (error) {
-      logger.error('Logout error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Logout failed');
-    }
-  }
+      
+      return ResponseUtil.success(res, null, 'Logged out successfully');
+    });
+  })
 );
 
 /**
  * Refresh token
  */
 router.post('/refresh',
-  async (req: Request, res: Response) => {
-    try {
-      const { refreshToken } = req.body;
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { refreshToken } = req.body;
+    
+    if (!refreshToken) {
+      return next(ErrorMiddleware.createError('Refresh token required', 400, 'REFRESH_TOKEN_REQUIRED'));
+    }
+    
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      const user = AuthMiddleware.verifyToken(refreshToken);
       
-      if (!refreshToken) {
-        return ResponseUtil.error(res, 'REFRESH_TOKEN_REQUIRED', 'Refresh token required', 400);
+      if (!user) {
+        return next(ErrorMiddleware.createError('Invalid refresh token', 401, 'INVALID_REFRESH_TOKEN'));
       }
       
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        const user = AuthMiddleware.verifyToken(refreshToken);
-        
-        if (!user) {
-          return ResponseUtil.unauthorized(res, 'Invalid refresh token');
-        }
-        
-        const newToken = AuthMiddleware.generateToken(user);
-        const newRefreshToken = AuthMiddleware.generateRefreshToken(user);
-        
-        logger.info('Token refreshed', {
-          userId: user.id,
-          requestId: req.requestId
-        });
-        
-        return ResponseUtil.success(res, {
-          token: newToken,
-          refreshToken: newRefreshToken,
-          expiresIn: '1h'
-        }, 'Token refreshed successfully');
+      const newToken = AuthMiddleware.generateToken(user);
+      const newRefreshToken = AuthMiddleware.generateRefreshToken(user);
+      
+      logger.info('Token refreshed', {
+        userId: user.id,
+        requestId: req.requestId
       });
-    } catch (error) {
-      logger.error('Token refresh error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Token refresh failed');
-    }
-  }
+      
+      return ResponseUtil.success(res, {
+        token: newToken,
+        refreshToken: newRefreshToken,
+        expiresIn: '1h'
+      }, 'Token refreshed successfully');
+    });
+  })
 );
 
 /**
@@ -183,96 +164,81 @@ router.post('/refresh',
  */
 router.get('/me',
   AuthMiddleware.authenticate,
-  async (req: Request, res: Response) => {
-    try {
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        const user = req.user;
-        
-        return ResponseUtil.success(res, {
-          id: user?.id,
-          email: user?.email,
-          name: user?.name,
-          role: user?.role,
-          active: user?.active,
-          lastLogin: user?.lastLogin,
-          createdAt: user?.createdAt
-        }, 'User profile retrieved');
-      });
-    } catch (error) {
-      logger.error('Get profile error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Failed to get user profile');
-    }
-  }
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      const user = req.user;
+      
+      return ResponseUtil.success(res, {
+        id: user?.id,
+        email: user?.email,
+        name: user?.name,
+        role: user?.role,
+        active: user?.active,
+        lastLogin: user?.lastLogin,
+        createdAt: user?.createdAt
+      }, 'User profile retrieved');
+    });
+  })
 );
 
 /**
  * Forgot password
  */
 router.post('/forgot-password',
-  async (req: Request, res: Response) => {
-    try {
-      const { email } = req.body;
-      
-      if (!email) {
-        return ResponseUtil.error(res, 'EMAIL_REQUIRED', 'Email is required', 400);
-      }
-      
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        // Mock password reset process
-        const resetToken = `reset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-        
-        logger.info('Password reset requested', {
-          email,
-          resetToken,
-          requestId: req.requestId
-        });
-        
-        return ResponseUtil.success(res, {
-          message: 'Password reset instructions sent to your email',
-          // In real implementation, don't return the token
-          resetToken: resetToken
-        }, 'Password reset initiated');
-      });
-    } catch (error) {
-      logger.error('Forgot password error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Password reset failed');
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { email } = req.body;
+    
+    if (!email) {
+      return next(ErrorMiddleware.createError('Email is required', 400, 'EMAIL_REQUIRED'));
     }
-  }
+    
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      // Mock password reset process
+      const resetToken = `reset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      
+      logger.info('Password reset requested', {
+        email,
+        resetToken,
+        requestId: req.requestId
+      });
+      
+      return ResponseUtil.success(res, {
+        message: 'Password reset instructions sent to your email',
+        // In real implementation, don't return the token
+        resetToken: resetToken
+      }, 'Password reset email sent');
+    });
+  })
 );
 
 /**
  * Reset password
  */
 router.post('/reset-password',
-  async (req: Request, res: Response) => {
-    try {
-      const { resetToken, newPassword } = req.body;
-      
-      if (!resetToken || !newPassword) {
-        return ResponseUtil.error(res, 'INVALID_REQUEST', 'Reset token and new password are required', 400);
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { resetToken, newPassword } = req.body;
+    
+    if (!resetToken || !newPassword) {
+      return next(ErrorMiddleware.createError('Reset token and new password are required', 400, 'INVALID_REQUEST'));
+    }
+    
+    // Add realistic delay
+    await ResponseUtil.withDelay(async () => {
+      // Mock password reset validation
+      if (!resetToken.startsWith('reset_')) {
+        return next(ErrorMiddleware.createError('Invalid or expired reset token', 400, 'INVALID_TOKEN'));
       }
       
-      // Add realistic delay
-      await ResponseUtil.withDelay(async () => {
-        // Mock password reset validation
-        if (!resetToken.startsWith('reset_')) {
-          return ResponseUtil.error(res, 'INVALID_TOKEN', 'Invalid reset token', 400);
-        }
-        
-        logger.info('Password reset completed', {
-          resetToken,
-          requestId: req.requestId
-        });
-        
-        return ResponseUtil.success(res, null, 'Password reset successful');
+      logger.info('Password reset completed', {
+        resetToken,
+        requestId: req.requestId
       });
-    } catch (error) {
-      logger.error('Reset password error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Password reset failed');
-    }
-  }
+      
+      return ResponseUtil.success(res, null, 'Password reset successfully');
+    });
+  })
 );
 
 export default router;

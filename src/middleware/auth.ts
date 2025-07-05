@@ -73,8 +73,15 @@ export class AuthMiddleware {
   /**
    * Mock user authentication
    */
+  static findUserByEmail(email: string) {
+    return mockUsers.find(u => u.email === email);
+  }
+
+  /**
+   * Mock user authentication
+   */
   static async authenticateUser(email: string, password: string): Promise<AuthUser | null> {
-    const user = mockUsers.find(u => u.email === email);
+    const user = this.findUserByEmail(email);
     
     if (!user || !user.active) {
       logAuth('login_attempt', undefined, false, { email, reason: 'user_not_found' });
