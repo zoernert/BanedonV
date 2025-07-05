@@ -9,6 +9,8 @@ import { ValidationMiddleware } from '../middleware/validation';
 import { ErrorMiddleware } from '../middleware/error';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
+import { randomFloat, randomInt } from '../utils/number.util';
+import { generateId } from '../utils/id.util';
 
 const router = Router();
 
@@ -30,9 +32,9 @@ router.get('/',
         email: `user${i + 1}@example.com`,
         name: `User ${i + 1}`,
         role: ['admin', 'manager', 'user'][i % 3],
-        active: Math.random() > 0.1,
-        lastLogin: Math.random() > 0.3 ? new Date(Date.now() - Math.random() * 86400000 * 7).toISOString() : null,
-        createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString()
+        active: randomFloat(0, 1) > 0.1,
+        lastLogin: randomFloat(0, 1) > 0.3 ? new Date(Date.now() - randomFloat(0, 86400000 * 7)).toISOString() : null,
+        createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString()
       }));
       
       const { items, total } = ResponseUtil.paginateArray(mockUsers, page, limit);
@@ -71,10 +73,10 @@ router.get('/:id',
         id: id,
         email: `user${id}@example.com`,
         name: `User ${id}`,
-        role: ['admin', 'manager', 'user'][Math.floor(Math.random() * 3)],
+        role: ['admin', 'manager', 'user'][randomInt(0, 2)],
         active: true,
-        lastLogin: new Date(Date.now() - Math.random() * 86400000 * 7).toISOString(),
-        createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+        lastLogin: new Date(Date.now() - randomFloat(0, 86400000 * 7)).toISOString(),
+        createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
         profile: {
           avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${id}`,
           bio: `Bio for user ${id}`,
@@ -87,9 +89,9 @@ router.get('/:id',
           language: 'en'
         },
         statistics: {
-          collectionsCount: Math.floor(Math.random() * 50),
-          filesCount: Math.floor(Math.random() * 500),
-          searchesCount: Math.floor(Math.random() * 1000)
+          collectionsCount: randomInt(0, 49),
+          filesCount: randomInt(0, 499),
+          searchesCount: randomInt(0, 999)
         }
       };
       
@@ -125,8 +127,8 @@ router.put('/:id',
         name: updateData.name || `User ${id}`,
         role: updateData.role || 'user',
         active: true,
-        lastLogin: new Date(Date.now() - Math.random() * 86400000 * 7).toISOString(),
-        createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+        lastLogin: new Date(Date.now() - randomFloat(0, 86400000 * 7)).toISOString(),
+        createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
         updatedAt: new Date().toISOString()
       };
       
@@ -163,7 +165,7 @@ router.patch('/:id',
         role: updateData.role || 'user',
         avatar: updateData.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${id}`,
         isActive: updateData.isActive !== undefined ? updateData.isActive : true,
-        createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+        createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
         updatedAt: new Date().toISOString(),
         permissions: updateData.permissions || []
       };
@@ -223,7 +225,7 @@ router.post('/invite',
     
     // Add realistic delay
     await ResponseUtil.withDelay(async () => {
-      const inviteToken = `invite_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const inviteToken = generateId('invite');
       
       logger.info('User invited', {
         email,
@@ -298,11 +300,11 @@ router.get('/:id/activity',
       // Mock activity data
       const mockActivities = Array.from({ length: 30 }, (_, i) => ({
         id: `activity_${i + 1}`,
-        type: ['login', 'logout', 'file_upload', 'search', 'collection_create', 'file_download'][Math.floor(Math.random() * 6)],
+        type: ['login', 'logout', 'file_upload', 'search', 'collection_create', 'file_download'][randomInt(0, 5)],
         description: `Activity ${i + 1} description`,
-        timestamp: new Date(Date.now() - Math.random() * 86400000 * 30).toISOString(),
+        timestamp: new Date(Date.now() - randomFloat(0, 86400000 * 30)).toISOString(),
         metadata: {
-          ip: `192.168.1.${Math.floor(Math.random() * 255)}`,
+          ip: `192.168.1.${randomInt(0, 254)}`,
           userAgent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
       }));

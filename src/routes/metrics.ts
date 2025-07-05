@@ -6,6 +6,7 @@
 import { Router, Request, Response } from 'express';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
+import { randomFloat, randomInt } from '../utils/number.util';
 
 const router = Router();
 
@@ -41,15 +42,15 @@ router.get('/', (req: Request, res: Response) => {
     timestamp: new Date().toISOString(),
     uptime: process.uptime(),
     requests: {
-      total: mockMetrics.requests.total + Math.floor(Math.random() * 1000),
-      success: mockMetrics.requests.success + Math.floor(Math.random() * 900),
-      error: mockMetrics.requests.error + Math.floor(Math.random() * 100),
-      rate: Math.random() * 100
+      total: mockMetrics.requests.total + randomInt(0, 999),
+      success: mockMetrics.requests.success + randomInt(0, 899),
+      error: mockMetrics.requests.error + randomInt(0, 99),
+      rate: randomFloat(0, 100)
     },
     performance: {
-      averageResponseTime: Math.random() * 500,
-      p95ResponseTime: Math.random() * 1000,
-      p99ResponseTime: Math.random() * 2000,
+      averageResponseTime: randomFloat(0, 500),
+      p95ResponseTime: randomFloat(0, 1000),
+      p99ResponseTime: randomFloat(0, 2000),
       memoryUsage: {
         used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
         total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024)
@@ -78,15 +79,15 @@ router.get('/performance', (req: Request, res: Response) => {
   const performance = {
     timestamp: new Date().toISOString(),
     responseTime: {
-      average: Math.random() * 500,
-      p50: Math.random() * 300,
-      p95: Math.random() * 1000,
-      p99: Math.random() * 2000
+      average: randomFloat(0, 500),
+      p50: randomFloat(0, 300),
+      p95: randomFloat(0, 1000),
+      p99: randomFloat(0, 2000)
     },
     throughput: {
-      requestsPerSecond: Math.random() * 100,
-      requestsPerMinute: Math.random() * 6000,
-      requestsPerHour: Math.random() * 360000
+      requestsPerSecond: randomFloat(0, 100),
+      requestsPerMinute: randomFloat(0, 6000),
+      requestsPerHour: randomFloat(0, 360000)
     },
     memory: {
       used: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
@@ -96,11 +97,11 @@ router.get('/performance', (req: Request, res: Response) => {
     },
     cpu: {
       usage: process.cpuUsage(),
-      loadAverage: Math.random() * 2
+      loadAverage: randomFloat(0, 2)
     },
     gc: {
-      collections: Math.floor(Math.random() * 100),
-      duration: Math.random() * 10
+      collections: randomInt(0, 99),
+      duration: randomFloat(0, 10)
     }
   };
 
@@ -117,37 +118,37 @@ router.get('/api', (req: Request, res: Response) => {
       {
         path: '/api/v1/auth/login',
         method: 'POST',
-        requests: Math.floor(Math.random() * 1000),
-        avgResponseTime: Math.random() * 200,
-        errorRate: Math.random() * 5
+        requests: randomInt(0, 999),
+        avgResponseTime: randomFloat(0, 200),
+        errorRate: randomFloat(0, 5)
       },
       {
         path: '/api/v1/users',
         method: 'GET',
-        requests: Math.floor(Math.random() * 500),
-        avgResponseTime: Math.random() * 150,
-        errorRate: Math.random() * 2
+        requests: randomInt(0, 499),
+        avgResponseTime: randomFloat(0, 150),
+        errorRate: randomFloat(0, 2)
       },
       {
         path: '/api/v1/collections',
         method: 'GET',
-        requests: Math.floor(Math.random() * 800),
-        avgResponseTime: Math.random() * 300,
-        errorRate: Math.random() * 3
+        requests: randomInt(0, 799),
+        avgResponseTime: randomFloat(0, 300),
+        errorRate: randomFloat(0, 3)
       },
       {
         path: '/api/v1/files',
         method: 'POST',
-        requests: Math.floor(Math.random() * 200),
-        avgResponseTime: Math.random() * 1000,
-        errorRate: Math.random() * 8
+        requests: randomInt(0, 199),
+        avgResponseTime: randomFloat(0, 1000),
+        errorRate: randomFloat(0, 8)
       },
       {
         path: '/api/v1/search',
         method: 'GET',
-        requests: Math.floor(Math.random() * 600),
-        avgResponseTime: Math.random() * 400,
-        errorRate: Math.random() * 4
+        requests: randomInt(0, 599),
+        avgResponseTime: randomFloat(0, 400),
+        errorRate: randomFloat(0, 4)
       }
     ],
     topErrors: [
@@ -155,13 +156,13 @@ router.get('/api', (req: Request, res: Response) => {
         path: '/api/v1/files',
         method: 'POST',
         error: 'File upload failed',
-        count: Math.floor(Math.random() * 50)
+        count: randomInt(0, 49)
       },
       {
         path: '/api/v1/search',
         method: 'GET',
         error: 'Search timeout',
-        count: Math.floor(Math.random() * 20)
+        count: randomInt(0, 19)
       }
     ]
   };
@@ -176,31 +177,31 @@ router.get('/users', (req: Request, res: Response) => {
   const userMetrics = {
     timestamp: new Date().toISOString(),
     active: {
-      total: Math.floor(Math.random() * 100),
-      today: Math.floor(Math.random() * 50),
-      thisWeek: Math.floor(Math.random() * 200),
-      thisMonth: Math.floor(Math.random() * 500)
+      total: randomInt(0, 99),
+      today: randomInt(0, 49),
+      thisWeek: randomInt(0, 199),
+      thisMonth: randomInt(0, 499)
     },
     registrations: {
-      total: Math.floor(Math.random() * 1000),
-      today: Math.floor(Math.random() * 10),
-      thisWeek: Math.floor(Math.random() * 50),
-      thisMonth: Math.floor(Math.random() * 100)
+      total: randomInt(0, 999),
+      today: randomInt(0, 9),
+      thisWeek: randomInt(0, 49),
+      thisMonth: randomInt(0, 99)
     },
     activity: {
-      averageSessionDuration: Math.random() * 1800,
-      averageActionsPerSession: Math.random() * 20,
+      averageSessionDuration: randomFloat(0, 1800),
+      averageActionsPerSession: randomFloat(0, 20),
       topActions: [
-        { action: 'file_upload', count: Math.floor(Math.random() * 500) },
-        { action: 'search', count: Math.floor(Math.random() * 1000) },
-        { action: 'collection_create', count: Math.floor(Math.random() * 200) }
+        { action: 'file_upload', count: randomInt(0, 499) },
+        { action: 'search', count: randomInt(0, 999) },
+        { action: 'collection_create', count: randomInt(0, 199) }
       ]
     },
     geography: [
-      { country: 'US', users: Math.floor(Math.random() * 300) },
-      { country: 'UK', users: Math.floor(Math.random() * 150) },
-      { country: 'CA', users: Math.floor(Math.random() * 100) },
-      { country: 'DE', users: Math.floor(Math.random() * 80) }
+      { country: 'US', users: randomInt(0, 299) },
+      { country: 'UK', users: randomInt(0, 149) },
+      { country: 'CA', users: randomInt(0, 99) },
+      { country: 'DE', users: randomInt(0, 79) }
     ]
   };
 
@@ -219,24 +220,24 @@ router.get('/system', (req: Request, res: Response) => {
       total: Math.round(process.memoryUsage().heapTotal / 1024 / 1024),
       external: Math.round(process.memoryUsage().external / 1024 / 1024),
       rss: Math.round(process.memoryUsage().rss / 1024 / 1024),
-      utilization: Math.random() * 100
+      utilization: randomFloat(0, 100)
     },
     cpu: {
       usage: process.cpuUsage(),
-      loadAverage: Math.random() * 2,
-      utilization: Math.random() * 100
+      loadAverage: randomFloat(0, 2),
+      utilization: randomFloat(0, 100)
     },
     storage: {
-      total: Math.random() * 1000,
-      used: Math.random() * 500,
-      free: Math.random() * 500,
-      utilization: Math.random() * 100
+      total: randomFloat(0, 1000),
+      used: randomFloat(0, 500),
+      free: randomFloat(0, 500),
+      utilization: randomFloat(0, 100)
     },
     network: {
-      bytesIn: Math.floor(Math.random() * 1000000),
-      bytesOut: Math.floor(Math.random() * 1000000),
-      packetsIn: Math.floor(Math.random() * 10000),
-      packetsOut: Math.floor(Math.random() * 10000)
+      bytesIn: randomInt(0, 999999),
+      bytesOut: randomInt(0, 999999),
+      packetsIn: randomInt(0, 9999),
+      packetsOut: randomInt(0, 9999)
     }
   };
 

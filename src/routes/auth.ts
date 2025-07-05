@@ -9,6 +9,7 @@ import { ValidationMiddleware } from '../middleware/validation';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
 import { ErrorMiddleware } from '../middleware/error';
+import { generateId } from '../utils/id.util';
 
 const router = Router();
 
@@ -72,7 +73,7 @@ router.post('/register',
       
       // Create new user (mock)
       const newUser = {
-        id: `user_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        id: generateId('user'),
         email,
         name,
         role: role as 'admin' | 'manager' | 'user',
@@ -196,7 +197,7 @@ router.post('/forgot-password',
     // Add realistic delay
     await ResponseUtil.withDelay(async () => {
       // Mock password reset process
-      const resetToken = `reset_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+      const resetToken = generateId('reset');
       
       logger.info('Password reset requested', {
         email,

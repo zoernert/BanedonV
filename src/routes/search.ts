@@ -9,6 +9,7 @@ import { ErrorMiddleware } from '../middleware/error';
 import { ValidationMiddleware } from '../middleware/validation';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
+import { randomFloat, randomInt } from '../utils/number.util';
 
 const router = Router();
 
@@ -30,12 +31,12 @@ router.get('/',
             title: `Document ${i + 1} - ${query}`,
             content: `This document contains relevant information about ${query}. It has been indexed and can be found through search.`,
             type: 'file' as const,
-            score: Math.random() * 0.5 + 0.5, // Score between 0.5 and 1.0
+            score: randomFloat(0.5, 1.0), // Score between 0.5 and 1.0
             highlights: [`...contains ${query}...`, `...information about ${query}...`],
             metadata: {
               fileName: `document_${i + 1}.pdf`,
               fileType: 'pdf',
-              size: Math.floor(Math.random() * 10000000),
+              size: randomInt(0, 9999999),
               collectionId: `collection_${Math.floor(i / 3) + 1}`,
               collectionName: `Collection ${Math.floor(i / 3) + 1}`,
               owner: {
@@ -43,7 +44,7 @@ router.get('/',
                 name: `User ${Math.floor(i / 5) + 1}`,
                 email: `user${Math.floor(i / 5) + 1}@example.com`
               },
-              createdAt: new Date(Date.now() - Math.random() * 86400000 * 30).toISOString(),
+              createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 30)).toISOString(),
               tags: [`tag${i % 5 + 1}`]
             }
           })),
@@ -53,18 +54,18 @@ router.get('/',
             title: `Collection ${i + 1} - ${query}`,
             content: `This collection contains documents related to ${query}. It has multiple files and is well organized.`,
             type: 'collection' as const,
-            score: Math.random() * 0.3 + 0.7, // Score between 0.7 and 1.0
+            score: randomFloat(0.7, 1.0), // Score between 0.7 and 1.0
             highlights: [`...related to ${query}...`],
             metadata: {
               collectionType: 'private',
-              fileCount: Math.floor(Math.random() * 50) + 1,
-              size: Math.floor(Math.random() * 1000000000),
+              fileCount: randomInt(1, 50),
+              size: randomInt(0, 999999999),
               owner: {
                 id: `user_${Math.floor(i / 2) + 1}`,
                 name: `User ${Math.floor(i / 2) + 1}`,
                 email: `user${Math.floor(i / 2) + 1}@example.com`
               },
-              createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
+              createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
               tags: [`collection-tag${i + 1}`]
             }
           })),
@@ -74,15 +75,15 @@ router.get('/',
             title: `User ${i + 1} - ${query}`,
             content: `User profile that matches the search query ${query}. This user has been active recently.`,
             type: 'user' as const,
-            score: Math.random() * 0.2 + 0.8, // Score between 0.8 and 1.0
+            score: randomFloat(0.8, 1.0), // Score between 0.8 and 1.0
             highlights: [`...matches ${query}...`],
             metadata: {
               email: `user${i + 1}@example.com`,
               role: ['admin', 'manager', 'user'][i % 3],
-              lastLogin: new Date(Date.now() - Math.random() * 86400000 * 7).toISOString(),
-              createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
-              collectionsCount: Math.floor(Math.random() * 20),
-              filesCount: Math.floor(Math.random() * 100)
+              lastLogin: new Date(Date.now() - randomFloat(0, 86400000 * 7)).toISOString(),
+              createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
+              collectionsCount: randomInt(0, 19),
+              filesCount: randomInt(0, 99)
             }
           })) : [])
         ];

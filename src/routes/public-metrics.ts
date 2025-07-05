@@ -6,6 +6,7 @@
 import { Router, Request, Response } from 'express';
 import { ErrorMiddleware } from '../middleware/error';
 import ResponseUtil from '../utils/response';
+import { randomFloat } from '../utils/number.util';
 
 const router = Router();
 
@@ -19,7 +20,7 @@ router.get('/', ErrorMiddleware.asyncHandler(async (req: Request, res: Response)
       timestamp: new Date().toISOString(),
       uptime: process.uptime(),
       status: 'ok',
-      averageResponseTime: Math.random() * 250 + 50, // mock value
+      averageResponseTime: randomFloat(50, 300), // mock value
     };
     return ResponseUtil.success(res, metrics, 'Public metrics retrieved successfully');
   });
