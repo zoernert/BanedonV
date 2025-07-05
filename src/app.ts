@@ -135,8 +135,15 @@ export class App {
     // API routes with rate limiting
     const rateLimits = RateLimitMiddleware.getRateLimitConfig();
     
-    // Authentication routes with strict rate limiting
-    this.app.use(`${apiPrefix}/auth`, rateLimits.auth, authRoutes);
+    // Authentication routes with strict rate limiting (except /me)
+    this.app.use(`${apiPrefix}/auth`, (req, res, next) => {
+      // Apply standard rate limiting to /me endpoint
+      if (req.path === '/me') {
+        return rateLimits.api(req, res, next);
+      }
+      // Apply strict rate limiting to other auth endpoints
+      return rateLimits.auth(req, res, next);
+    }, authRoutes);
     
     // API routes with standard rate limiting
     this.app.use(`${apiPrefix}/users`, rateLimits.api, userRoutes);
