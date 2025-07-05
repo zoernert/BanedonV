@@ -14,6 +14,7 @@ import { serverConfig } from './config/server';
 import { LoggingMiddleware } from './middleware/logging';
 import { ErrorMiddleware } from './middleware/error';
 import { RateLimitMiddleware } from './middleware/rate-limit';
+import { AuthMiddleware } from './middleware/auth';
 import logger from './utils/logger';
 import ResponseUtil from './utils/response';
 
@@ -28,6 +29,7 @@ import adminRoutes from './routes/admin';
 import integrationRoutes from './routes/integrations';
 import healthRoutes from './routes/health';
 import metricsRoutes from './routes/metrics';
+import publicMetricsRoutes from './routes/public-metrics';
 
 export class App {
   public app: Express;
@@ -133,6 +135,7 @@ export class App {
     // Health and metrics routes (no rate limiting)
     this.app.use('/health', healthRoutes);
     this.app.use('/metrics', metricsRoutes);
+    this.app.use(`${apiPrefix}/metrics`, publicMetricsRoutes);
 
     // API routes with rate limiting
     if (process.env.NODE_ENV !== 'test') {

@@ -20,6 +20,10 @@ const nextConfig = {
         destination: 'http://localhost:3002/api/v1/users/:path*',
       },
       {
+        source: '/api/v1/metrics/:path*',
+        destination: 'http://localhost:3002/api/v1/metrics/:path*',
+      },
+      {
         source: '/api/v1/admin/:path*',
         destination: 'http://localhost:3002/api/v1/admin/:path*',
       },
