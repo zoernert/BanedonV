@@ -5,21 +5,12 @@
  */
 
 import { Request, Response, NextFunction } from 'express';
-import jwt, { SignOptions } from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
-import { authConfig, mockUsers, roles } from '../config/auth';
-import logger, { logAuth } from '../utils/logger';
+import { roles } from '../config/auth';
+import { logAuth } from '../utils/logger';
 import { ErrorMiddleware } from './error';
-
-export interface AuthUser {
-  id: string;
-  email: string;
-  name: string;
-  role: 'admin' | 'manager' | 'user';
-  active: boolean;
-  lastLogin?: string | undefined;
-  createdAt: string;
-}
+import { AuthUser } from '../domain/models/AuthUser';
+import { IAuthService } from '../services/interfaces/IAuthService';
+import { ErrorCodes } from '../domain/errors/ErrorCodes';
 
 declare global {
   namespace Express {
@@ -32,154 +23,50 @@ declare global {
 
 export class AuthMiddleware {
   /**
-   * Generate JWT token
+   * Authentication middleware factory
    */
-  static generateToken(user: AuthUser): string {
-    const payload = {
-      id: user.id,
-      email: user.email,
-      role: user.role
-    };
-    
-    return jwt.sign(payload, authConfig.jwtSecret, { expiresIn: '1h' });
-  }
+  static authenticate(authService: IAuthService) {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+      const authHeader = req.headers.authorization;
 
-  /**
-   * Generate refresh token
-   */
-  static generateRefreshToken(user: AuthUser): string {
-    const payload = {
-      id: user.id,
-      type: 'refresh'
-    };
-    
-    return jwt.sign(payload, authConfig.jwtSecret, { expiresIn: '7d' });
-  }
-
-  /**
-   * Hash password
-   */
-  static async hashPassword(password: string): Promise<string> {
-    return bcrypt.hash(password, authConfig.bcryptSaltRounds);
-  }
-
-  /**
-   * Compare password
-   */
-  static async comparePassword(password: string, hash: string): Promise<boolean> {
-    return bcrypt.compare(password, hash);
-  }
-
-  /**
-   * Mock user authentication
-   */
-  static findUserByEmail(email: string) {
-    return mockUsers.find(u => u.email === email);
-  }
-
-  /**
-   * Mock user authentication
-   */
-  static async authenticateUser(email: string, password: string): Promise<AuthUser | null> {
-    const user = this.findUserByEmail(email);
-    
-    if (!user || !user.active) {
-      logAuth('login_attempt', undefined, false, { email, reason: 'user_not_found' });
-      return null;
-    }
-
-    // In a real system, you would compare hashed passwords
-    // For mock purposes, we'll compare plain text
-    if (password !== user.password) {
-      logAuth('login_attempt', user.id, false, { email, reason: 'invalid_password' });
-      return null;
-    }
-
-    const authUser: AuthUser = {
-      id: user.id,
-      email: user.email,
-      name: user.name,
-      role: user.role as 'admin' | 'manager' | 'user',
-      active: user.active,
-      createdAt: user.createdAt
-    };
-
-    if (user.lastLogin) {
-      authUser.lastLogin = user.lastLogin;
-    }
-
-    logAuth('login_success', user.id, true, { email });
-    return authUser;
-  }
-
-  /**
-   * Verify JWT token
-   */
-  static verifyToken(token: string): AuthUser | null {
-    try {
-      const decoded = jwt.verify(token, authConfig.jwtSecret) as any;
-      const user = mockUsers.find(u => u.id === decoded.id);
-      
-      if (!user || !user.active) {
-        return null;
+      if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        logAuth('auth_missing', undefined, false, { url: req.originalUrl });
+        return next(ErrorMiddleware.createError('Authentication token required', 401, ErrorCodes.AUTH.AUTHENTICATION_TOKEN_REQUIRED));
       }
 
-      return {
-        id: user.id,
-        email: user.email,
-        name: user.name,
-        role: user.role as 'admin' | 'manager' | 'user',
-        active: user.active,
-        lastLogin: user.lastLogin || undefined,
-        createdAt: user.createdAt
-      };
-    } catch (error) {
-      logger.warn('Token verification failed', { error: (error as Error).message });
-      return null;
-    }
-  }
-
-  /**
-   * Authentication middleware
-   */
-  static authenticate(req: Request, res: Response, next: NextFunction): void {
-    const authHeader = req.headers.authorization;
-    
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      logAuth('auth_missing', undefined, false, { url: req.originalUrl });
-      return next(ErrorMiddleware.createError('Authentication token required', 401, 'AUTHENTICATION_TOKEN_REQUIRED'));
-    }
-
-    const token = authHeader.substring(7);
-    const user = AuthMiddleware.verifyToken(token);
-
-    if (!user) {
-      logAuth('auth_invalid', undefined, false, { url: req.originalUrl });
-      return next(ErrorMiddleware.createError('Invalid authentication token', 401, 'INVALID_TOKEN'));
-    }
-
-    req.user = user;
-    logAuth('auth_success', user.id, true, { url: req.originalUrl });
-    next();
-  }
-
-  /**
-   * Optional authentication middleware
-   */
-  static optionalAuthenticate(req: Request, res: Response, next: NextFunction): void {
-    const authHeader = req.headers.authorization;
-    
-    if (authHeader && authHeader.startsWith('Bearer ')) {
       const token = authHeader.substring(7);
-      const user = AuthMiddleware.verifyToken(token);
-      
-      if (user) {
-        req.user = user;
-        logAuth('optional_auth_success', user.id, true, { url: req.originalUrl });
-      }
-    }
+      const user = await authService.verifyToken(token);
 
-    next();
+      if (!user) {
+        logAuth('auth_invalid', undefined, false, { url: req.originalUrl });
+        return next(ErrorMiddleware.createError('Invalid authentication token', 401, ErrorCodes.AUTH.INVALID_TOKEN));
+      }
+
+      req.user = user;
+      logAuth('auth_success', user.id, true, { url: req.originalUrl });
+      next();
+    };
+  }
+
+  /**
+   * Optional authentication middleware factory
+   */
+  static optionalAuthenticate(authService: IAuthService) {
+    return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+        const authHeader = req.headers.authorization;
+
+        if (authHeader && authHeader.startsWith('Bearer ')) {
+            const token = authHeader.substring(7);
+            const user = await authService.verifyToken(token);
+
+            if (user) {
+                req.user = user;
+                logAuth('optional_auth_success', user.id, true, { url: req.originalUrl });
+            }
+        }
+
+        next();
+    }
   }
 
   /**
@@ -189,7 +76,7 @@ export class AuthMiddleware {
     return (req: Request, res: Response, next: NextFunction): void => {
       if (!req.user) {
         logAuth('auth_required', undefined, false, { url: req.originalUrl });
-        return next(ErrorMiddleware.createError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
+        return next(ErrorMiddleware.createError('Authentication required', 401, ErrorCodes.AUTH.AUTHENTICATION_REQUIRED));
       }
 
       const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
