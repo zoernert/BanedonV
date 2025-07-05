@@ -1,6 +1,7 @@
 /**
  * String Utility Functions
  */
+import { randomInt } from './number.util';
 
 /**
  * Capitalize first letter
@@ -40,7 +41,7 @@ export function generateRandomString(length: number = 10): string {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
   for (let i = 0; i < length; i++) {
-    result += chars.charAt(Math.floor(Math.random() * chars.length));
+    result += chars.charAt(randomInt(0, chars.length - 1));
   }
   return result;
 }

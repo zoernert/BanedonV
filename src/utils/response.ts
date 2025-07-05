@@ -189,7 +189,7 @@ export class ResponseUtil {
    * Simulate network error scenarios
    */
   static simulateNetworkError(probability: number = 0.01): boolean {
-    return Math.random() < probability;
+    return randomFloat(0, 1) < probability;
   }
 
   /**

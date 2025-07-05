@@ -1,6 +1,7 @@
 /**
  * Array Utility Functions
  */
+import { randomInt } from './number.util';
 
 /**
  * Random element from array
@@ -9,7 +10,7 @@ export function randomElement<T>(array: T[]): T {
   if (array.length === 0) {
     throw new Error('Array cannot be empty');
   }
-  return array[Math.floor(Math.random() * array.length)] as T;
+  return array[randomInt(0, array.length - 1)] as T;
 }
 
 /**
@@ -18,7 +19,7 @@ export function randomElement<T>(array: T[]): T {
 export function shuffleArray<T>(array: T[]): T[] {
   const shuffled = [...array];
   for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
+    const j = randomInt(0, i);
     const temp = shuffled[i];
     shuffled[i] = shuffled[j] as T;
     shuffled[j] = temp as T;
