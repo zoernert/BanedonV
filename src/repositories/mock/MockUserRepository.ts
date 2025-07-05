@@ -11,7 +11,7 @@ export class MockUserRepository implements IUserRepository {
   private users: User[];
 
   constructor() {
-    this.users = deepClone(mockUsers.map(u => ({ ...u, lastLogin: u.lastLogin || null })));
+    this.users = deepClone(mockUsers) as User[];
   }
 
   async findById(id: string): Promise<User | null> {
@@ -31,7 +31,8 @@ export class MockUserRepository implements IUserRepository {
       role: userData.role || 'user',
       active: true,
       lastLogin: null,
-      createdAt: new Date().toISOString()
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
     };
     this.users.push(newUser);
     return newUser;
@@ -44,8 +45,8 @@ export class MockUserRepository implements IUserRepository {
     }
 
     const updatedUser = { ...this.users[userIndex], ...updates } as User;
-    if(!('lastLogin' in updates)) {
-        (updatedUser as any).updatedAt = new Date().toISOString()
+    if (!('lastLogin' in updates)) {
+      updatedUser.updatedAt = new Date().toISOString();
     }
     this.users[userIndex] = updatedUser;
 

@@ -9,4 +9,5 @@ export interface AuthUser {
   active: boolean;
   lastLogin?: string | null;
   createdAt: string;
+  updatedAt?: string;
 }

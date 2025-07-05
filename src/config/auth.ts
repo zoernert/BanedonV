@@ -35,7 +35,8 @@ export const mockUsers = [
     name: 'BanedonV Admin',
     active: true,
     lastLogin: null,
-    createdAt: '2024-01-01T00:00:00Z'
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
     id: 'user_2',
@@ -45,7 +46,8 @@ export const mockUsers = [
     name: 'Demo User',
     active: true,
     lastLogin: null,
-    createdAt: '2024-01-01T00:00:00Z'
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   },
   {
     id: 'user_3',
@@ -55,7 +57,8 @@ export const mockUsers = [
     name: 'Team Manager',
     active: true,
     lastLogin: null,
-    createdAt: '2024-01-01T00:00:00Z'
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-01-01T00:00:00Z'
   }
 ];
 
