@@ -3,8 +3,9 @@
  * Search functionality endpoints
  */
 
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response, NextFunction } from 'express';
 import { AuthMiddleware } from '../middleware/auth';
+import { ErrorMiddleware } from '../middleware/error';
 import { ValidationMiddleware } from '../middleware/validation';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
@@ -17,14 +18,13 @@ const router = Router();
 router.get('/', 
   AuthMiddleware.authenticate,
   ValidationMiddleware.common.validatePagination,
-  async (req: Request, res: Response) => {
-    try {
-      const { q: query, type, owner, tags, fileType, dateRange } = req.query;
-      const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
-      
-      if (!query) {
-        return ResponseUtil.error(res, 'QUERY_REQUIRED', 'Search query is required', 400);
-      }
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+    const { q: query, type, owner, tags, fileType, dateRange } = req.query;
+    const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
+    
+    if (!query) {
+      return next(ErrorMiddleware.createError('Search query is required', 400, 'QUERY_REQUIRED'));
+    }
       
       await ResponseUtil.withDelay(async () => {
         // Mock search results
@@ -145,12 +145,7 @@ router.get('/',
           total
         });
       });
-      });
-    } catch (error) {
-      logger.error('Search error', { error: (error as Error).message, requestId: req.requestId });
-      ResponseUtil.internalServerError(res, 'Search failed');
-    }
-  }
+  })
 );
 
 export default router;
