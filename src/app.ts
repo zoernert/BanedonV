@@ -116,8 +116,10 @@ export class App {
     this.app.use(LoggingMiddleware.getMorganLogger());
 
     // Rate limiting middleware
-    const rateLimits = RateLimitMiddleware.getRateLimitConfig();
-    this.app.use(rateLimits.standard);
+    if (process.env.NODE_ENV !== 'test') {
+      const rateLimits = RateLimitMiddleware.getRateLimitConfig();
+      this.app.use(rateLimits.standard);
+    }
 
     logger.info('Middleware stack initialized');
   }
@@ -133,26 +135,38 @@ export class App {
     this.app.use('/metrics', metricsRoutes);
 
     // API routes with rate limiting
-    const rateLimits = RateLimitMiddleware.getRateLimitConfig();
-    
-    // Authentication routes with strict rate limiting (except /me)
-    this.app.use(`${apiPrefix}/auth`, (req, res, next) => {
-      // Apply standard rate limiting to /me endpoint
-      if (req.path === '/me') {
-        return rateLimits.api(req, res, next);
-      }
-      // Apply strict rate limiting to other auth endpoints
-      return rateLimits.auth(req, res, next);
-    }, authRoutes);
-    
-    // API routes with standard rate limiting
-    this.app.use(`${apiPrefix}/users`, rateLimits.api, userRoutes);
-    this.app.use(`${apiPrefix}/collections`, rateLimits.api, collectionRoutes);
-    this.app.use(`${apiPrefix}/files`, rateLimits.api, fileRoutes);
-    this.app.use(`${apiPrefix}/search`, rateLimits.search, searchRoutes);
-    this.app.use(`${apiPrefix}/billing`, rateLimits.api, billingRoutes);
-    this.app.use(`${apiPrefix}/admin`, rateLimits.api, adminRoutes);
-    this.app.use(`${apiPrefix}/integrations`, rateLimits.api, integrationRoutes);
+    if (process.env.NODE_ENV !== 'test') {
+      const rateLimits = RateLimitMiddleware.getRateLimitConfig();
+      
+      // Authentication routes with strict rate limiting (except /me)
+      this.app.use(`${apiPrefix}/auth`, (req, res, next) => {
+        // Apply standard rate limiting to /me endpoint
+        if (req.path === '/me') {
+          return rateLimits.api(req, res, next);
+        }
+        // Apply strict rate limiting to other auth endpoints
+        return rateLimits.auth(req, res, next);
+      }, authRoutes);
+      
+      // API routes with standard rate limiting
+      this.app.use(`${apiPrefix}/users`, rateLimits.api, userRoutes);
+      this.app.use(`${apiPrefix}/collections`, rateLimits.api, collectionRoutes);
+      this.app.use(`${apiPrefix}/files`, rateLimits.api, fileRoutes);
+      this.app.use(`${apiPrefix}/search`, rateLimits.search, searchRoutes);
+      this.app.use(`${apiPrefix}/billing`, rateLimits.api, billingRoutes);
+      this.app.use(`${apiPrefix}/admin`, rateLimits.api, adminRoutes);
+      this.app.use(`${apiPrefix}/integrations`, rateLimits.api, integrationRoutes);
+    } else {
+      // No rate limiting for test environment
+      this.app.use(`${apiPrefix}/auth`, authRoutes);
+      this.app.use(`${apiPrefix}/users`, userRoutes);
+      this.app.use(`${apiPrefix}/collections`, collectionRoutes);
+      this.app.use(`${apiPrefix}/files`, fileRoutes);
+      this.app.use(`${apiPrefix}/search`, searchRoutes);
+      this.app.use(`${apiPrefix}/billing`, billingRoutes);
+      this.app.use(`${apiPrefix}/admin`, adminRoutes);
+      this.app.use(`${apiPrefix}/integrations`, integrationRoutes);
+    }
 
     // API info endpoint
     this.app.get(`${apiPrefix}`, (req: Request, res: Response) => {
