@@ -7,6 +7,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.4.1] - 2025-07-06
+
+### Changed
+- **Dependency Cleanup**: Updated several outdated dependencies to their latest stable versions to improve security and performance.
+- **Modernized Dependencies**: Replaced the deprecated `faker` package with `@faker-js/faker` and moved it to `devDependencies`.
+- **Configuration**: Removed editor-specific settings from `.gitignore`.
+
+### Fixed
+- Aligned `package.json` dependencies with versions documented in the changelog for `v1.1.0` and newer.
+
 ## [1.4.0] - 2025-07-06
 
 ### Changed
