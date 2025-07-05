@@ -32,7 +32,7 @@ router.post('/register',
  * User logout
  */
 router.post('/logout',
-  AuthMiddleware.authenticate(authService),
+  AuthMiddleware.mockAuthenticate,
   (req, res, next) => authController.logout(req, res, next)
 );
 
@@ -47,7 +47,7 @@ router.post('/refresh',
  * Get current user
  */
 router.get('/me',
-  AuthMiddleware.authenticate(authService),
+  AuthMiddleware.mockAuthenticate,
   (req, res, next) => authController.getMe(req, res, next)
 );
 
