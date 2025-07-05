@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.3.0] - 2025-07-05
+
+### Changed
+- **Major Refactoring**: Broke down the monolithic `HelperUtil` and `ValidationUtil` classes into smaller, more focused modules under `src/utils` and `src/validation-schemas`. This improves code organization, maintainability, and testability.
+- **Error Handling Standardization**: Refactored all remaining routes (`users`, `collections`, `files`, `billing`) to use the centralized `asyncHandler`, ensuring consistent error management across the entire application.
+- **Code Consistency**: Replaced all usages of `Math.random()` with new, dedicated random number utilities to improve determinism and testability.
+
+### Fixed
+- **TypeScript Compilation Errors**: Resolved type mismatches in route handlers, particularly around pagination logic, to ensure a clean build and pass all tests.
+
+### Added
+- **Expanded Billing API**: Added new mock endpoints to the billing API for a more complete feature set.
+
 ## [1.2.0] - 2025-07-05
 
 ### Added
