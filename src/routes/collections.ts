@@ -8,6 +8,8 @@ import { AuthMiddleware } from '../middleware/auth';
 import { ValidationMiddleware } from '../middleware/validation';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
+import { randomInt, randomFloat } from '../utils/number.util';
+import { generateId } from '../utils/id.util';
 
 const router = Router();
 
@@ -34,14 +36,14 @@ router.get('/',
             name: `User ${Math.floor(i / 3) + 1}`,
             role: 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=user${Math.floor(i / 3) + 1}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },
-          createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
-          updatedAt: new Date(Date.now() - Math.random() * 86400000 * 30).toISOString(),
-          fileCount: Math.floor(Math.random() * 100),
-          size: Math.floor(Math.random() * 1000000000), // Size in bytes
+          createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
+          updatedAt: new Date(Date.now() - randomFloat(0, 86400000 * 30)).toISOString(),
+          fileCount: randomInt(0, 99),
+          size: randomInt(0, 999999999), // Size in bytes
           tags: [`tag${i % 5 + 1}`, `category${i % 3 + 1}`],
           permissions: []
         }));
@@ -92,14 +94,14 @@ router.get('/:id',
             name: req.user?.name || 'User',
             role: req.user?.role || 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },
-          createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
-          updatedAt: new Date(Date.now() - Math.random() * 86400000 * 30).toISOString(),
-          fileCount: Math.floor(Math.random() * 100),
-          size: Math.floor(Math.random() * 1000000000),
+          createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
+          updatedAt: new Date(Date.now() - randomFloat(0, 86400000 * 30)).toISOString(),
+          fileCount: randomInt(0, 99),
+          size: randomInt(0, 999999999),
           tags: ['important', 'work', 'documents'],
           permissions: []
         };
@@ -134,7 +136,7 @@ router.post('/',
       
       await ResponseUtil.withDelay(async () => {
         const newCollection = {
-          id: `collection_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          id: generateId('collection'),
           name,
           description,
           type: type as 'public' | 'private' | 'shared',
@@ -144,7 +146,7 @@ router.post('/',
             name: req.user?.name || 'User',
             role: req.user?.role || 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },
@@ -195,14 +197,14 @@ router.patch('/:id',
             name: req.user?.name || 'User',
             role: req.user?.role || 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },
-          createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
+          createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
           updatedAt: new Date().toISOString(),
-          fileCount: Math.floor(Math.random() * 100),
-          size: Math.floor(Math.random() * 1000000000),
+          fileCount: randomInt(0, 99),
+          size: randomInt(0, 999999999),
           tags: updateData.tags || ['updated'],
           permissions: updateData.permissions || []
         };

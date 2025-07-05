@@ -8,6 +8,8 @@ import { AuthMiddleware } from '../middleware/auth';
 import { ValidationMiddleware } from '../middleware/validation';
 import ResponseUtil from '../utils/response';
 import logger from '../utils/logger';
+import { randomInt, randomFloat } from '../utils/number.util';
+import { generateId } from '../utils/id.util';
 
 const router = Router();
 
@@ -27,7 +29,7 @@ router.get('/',
           id: `file_${i + 1}`,
           name: `document_${i + 1}.pdf`,
           type: ['pdf', 'docx', 'txt', 'jpg', 'png'][i % 5],
-          size: Math.floor(Math.random() * 10000000), // Size in bytes
+          size: randomInt(0, 9999999), // Size in bytes
           mimeType: ['application/pdf', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document', 'text/plain', 'image/jpeg', 'image/png'][i % 5],
           url: `https://api.banedonv.com/files/file_${i + 1}`,
           thumbnailUrl: i % 2 === 0 ? `https://api.banedonv.com/files/file_${i + 1}/thumbnail` : undefined,
@@ -43,14 +45,14 @@ router.get('/',
               name: `User ${Math.floor(i / 10) + 1}`,
               role: 'user' as const,
               avatar: `https://api.dicebear.com/7.x/initials/svg?seed=user${Math.floor(i / 10) + 1}`,
-              createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+              createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
               updatedAt: new Date().toISOString(),
               isActive: true
             },
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
             updatedAt: new Date().toISOString(),
-            fileCount: Math.floor(Math.random() * 100),
-            size: Math.floor(Math.random() * 1000000000),
+            fileCount: randomInt(0, 99),
+            size: randomInt(0, 999999999),
             tags: []
           },
           owner: {
@@ -59,12 +61,12 @@ router.get('/',
             name: `User ${Math.floor(i / 10) + 1}`,
             role: 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=user${Math.floor(i / 10) + 1}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },
-          createdAt: new Date(Date.now() - Math.random() * 86400000 * 30).toISOString(),
-          updatedAt: new Date(Date.now() - Math.random() * 86400000 * 10).toISOString(),
+          createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 30)).toISOString(),
+          updatedAt: new Date(Date.now() - randomFloat(0, 86400000 * 10)).toISOString(),
           tags: [`tag${i % 5 + 1}`],
           metadata: {
             author: `Author ${i + 1}`,
@@ -112,7 +114,7 @@ router.get('/:id',
           id: id,
           name: `document_${id}.pdf`,
           type: 'pdf',
-          size: Math.floor(Math.random() * 10000000),
+          size: randomInt(0, 9999999),
           mimeType: 'application/pdf',
           url: `https://api.banedonv.com/files/${id}`,
           thumbnailUrl: `https://api.banedonv.com/files/${id}/thumbnail`,
@@ -128,11 +130,11 @@ router.get('/:id',
               name: req.user?.name || 'User',
               role: req.user?.role || 'user' as const,
               avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-              createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+              createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
               updatedAt: new Date().toISOString(),
               isActive: true
             },
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
             updatedAt: new Date().toISOString(),
             fileCount: 25,
             size: 250000000,
@@ -144,12 +146,12 @@ router.get('/:id',
             name: req.user?.name || 'User',
             role: req.user?.role || 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },
-          createdAt: new Date(Date.now() - Math.random() * 86400000 * 30).toISOString(),
-          updatedAt: new Date(Date.now() - Math.random() * 86400000 * 10).toISOString(),
+          createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 30)).toISOString(),
+          updatedAt: new Date(Date.now() - randomFloat(0, 86400000 * 10)).toISOString(),
           tags: ['important', 'work'],
           metadata: {
             author: 'Document Author',
@@ -190,14 +192,15 @@ router.post('/',
       
       await ResponseUtil.withDelay(async () => {
         // Mock file upload
+        const fileId = generateId('file');
         const uploadedFile = {
-          id: `file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+          id: fileId,
           name: 'uploaded_file.pdf',
           type: 'pdf',
-          size: Math.floor(Math.random() * 10000000),
+          size: randomInt(0, 9999999),
           mimeType: 'application/pdf',
-          url: `https://api.banedonv.com/files/file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
-          thumbnailUrl: `https://api.banedonv.com/files/file_${Date.now()}_${Math.random().toString(36).substr(2, 9)}/thumbnail`,
+          url: `https://api.banedonv.com/files/${fileId}`,
+          thumbnailUrl: `https://api.banedonv.com/files/${fileId}/thumbnail`,
           collectionId: collectionId,
           collection: {
             id: collectionId,
@@ -210,11 +213,11 @@ router.post('/',
               name: req.user?.name || 'User',
               role: req.user?.role || 'user' as const,
               avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-              createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+              createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
               updatedAt: new Date().toISOString(),
               isActive: true
             },
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 90).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 90)).toISOString(),
             updatedAt: new Date().toISOString(),
             fileCount: 1,
             size: 10000000,
@@ -226,7 +229,7 @@ router.post('/',
             name: req.user?.name || 'User',
             role: req.user?.role || 'user' as const,
             avatar: `https://api.dicebear.com/7.x/initials/svg?seed=${req.user?.id}`,
-            createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+            createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
             updatedAt: new Date().toISOString(),
             isActive: true
           },

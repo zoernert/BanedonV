@@ -5,6 +5,8 @@
 
 import { Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
+import { sleep } from './async.util';
+import { randomFloat } from './number.util';
 
 export interface ApiResponse<T = any> {
   success: boolean;
@@ -178,8 +180,8 @@ export class ResponseUtil {
     minDelay: number = 100,
     maxDelay: number = 2000
   ): Promise<T> {
-    const delay = Math.random() * (maxDelay - minDelay) + minDelay;
-    await new Promise(resolve => setTimeout(resolve, delay));
+    const delay = randomFloat(minDelay, maxDelay);
+    await sleep(delay);
     return operation();
   }
 
