@@ -8,8 +8,8 @@ import { Request, Response, NextFunction } from 'express';
 import jwt, { SignOptions } from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { authConfig, mockUsers, roles } from '../config/auth';
-import ResponseUtil from '../utils/response';
 import logger, { logAuth } from '../utils/logger';
+import { ErrorMiddleware } from './error';
 
 export interface AuthUser {
   id: string;
@@ -140,7 +140,7 @@ export class AuthMiddleware {
     
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
       logAuth('auth_missing', undefined, false, { url: req.originalUrl });
-      return ResponseUtil.unauthorized(res, 'Authentication token required');
+      return next(ErrorMiddleware.createError('Authentication token required', 401, 'AUTHENTICATION_TOKEN_REQUIRED'));
     }
 
     const token = authHeader.substring(7);
@@ -148,7 +148,7 @@ export class AuthMiddleware {
 
     if (!user) {
       logAuth('auth_invalid', undefined, false, { url: req.originalUrl });
-      return ResponseUtil.unauthorized(res, 'Invalid authentication token');
+      return next(ErrorMiddleware.createError('Invalid authentication token', 401, 'INVALID_TOKEN'));
     }
 
     req.user = user;
@@ -182,7 +182,7 @@ export class AuthMiddleware {
     return (req: Request, res: Response, next: NextFunction): void => {
       if (!req.user) {
         logAuth('auth_required', undefined, false, { url: req.originalUrl });
-        return ResponseUtil.unauthorized(res, 'Authentication required');
+        return next(ErrorMiddleware.createError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
       }
 
       const allowedRoles = Array.isArray(requiredRoles) ? requiredRoles : [requiredRoles];
@@ -193,7 +193,7 @@ export class AuthMiddleware {
           userRole: req.user.role,
           requiredRoles: allowedRoles
         });
-        return ResponseUtil.forbidden(res, 'Insufficient permissions');
+        return next(ErrorMiddleware.createError('Insufficient permissions', 403, 'FORBIDDEN'));
       }
 
       logAuth('auth_authorized', req.user.id, true, { 
@@ -210,12 +210,12 @@ export class AuthMiddleware {
   static checkPermission(permission: string) {
     return (req: Request, res: Response, next: NextFunction): void => {
       if (!req.user) {
-        return ResponseUtil.unauthorized(res, 'Authentication required');
+        return next(ErrorMiddleware.createError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
       }
 
       const userRole = roles[req.user.role];
       if (!userRole) {
-        return ResponseUtil.forbidden(res, 'Invalid user role');
+        return next(ErrorMiddleware.createError('Invalid user role', 403, 'FORBIDDEN'));
       }
 
       // Check if user has permission
@@ -229,7 +229,7 @@ export class AuthMiddleware {
           permission,
           userRole: req.user.role
         });
-        return ResponseUtil.forbidden(res, 'Permission denied');
+        return next(ErrorMiddleware.createError('Permission denied', 403, 'FORBIDDEN'));
       }
 
       logAuth('permission_granted', req.user.id, true, { 
@@ -261,7 +261,7 @@ export class AuthMiddleware {
   static selfOrAdmin(userIdParam: string = 'id') {
     return (req: Request, res: Response, next: NextFunction): void => {
       if (!req.user) {
-        return ResponseUtil.unauthorized(res, 'Authentication required');
+        return next(ErrorMiddleware.createError('Authentication required', 401, 'AUTHENTICATION_REQUIRED'));
       }
 
       const targetUserId = req.params[userIdParam];
@@ -274,7 +274,7 @@ export class AuthMiddleware {
           targetUserId,
           userRole: req.user.role
         });
-        return ResponseUtil.forbidden(res, 'Access denied');
+        return next(ErrorMiddleware.createError('Access denied', 403, 'FORBIDDEN'));
       }
 
       next();

@@ -6,6 +6,7 @@
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
 import { ValidationUtil } from '../utils/validation';
+import { ErrorMiddleware } from './error';
 
 export class ValidationMiddleware {
   /**
@@ -16,7 +17,10 @@ export class ValidationMiddleware {
       const { error, value } = schema.validate(req.body);
       
       if (error) {
-        return ValidationUtil.validate({ body: schema })(req, res, next);
+        const details = {
+          body: error.details.map(d => ({ field: d.path.join('.'), message: d.message }))
+        };
+        return next(ErrorMiddleware.createError('Validation failed', 422, 'VALIDATION_ERROR', details));
       }
       
       req.body = value;
@@ -32,7 +36,10 @@ export class ValidationMiddleware {
       const { error, value } = schema.validate(req.params);
       
       if (error) {
-        return ValidationUtil.validate({ params: schema })(req, res, next);
+        const details = {
+          params: error.details.map(d => ({ field: d.path.join('.'), message: d.message }))
+        };
+        return next(ErrorMiddleware.createError('Validation failed', 422, 'VALIDATION_ERROR', details));
       }
       
       req.params = value;
@@ -48,7 +55,10 @@ export class ValidationMiddleware {
       const { error, value } = schema.validate(req.query);
       
       if (error) {
-        return ValidationUtil.validate({ query: schema })(req, res, next);
+        const details = {
+          query: error.details.map(d => ({ field: d.path.join('.'), message: d.message }))
+        };
+        return next(ErrorMiddleware.createError('Validation failed', 422, 'VALIDATION_ERROR', details));
       }
       
       req.query = value;
@@ -64,7 +74,10 @@ export class ValidationMiddleware {
       const { error, value } = schema.validate(req.headers);
       
       if (error) {
-        return ValidationUtil.validate({ headers: schema })(req, res, next);
+        const details = {
+          headers: error.details.map(d => ({ field: d.path.join('.'), message: d.message }))
+        };
+        return next(ErrorMiddleware.createError('Validation failed', 422, 'VALIDATION_ERROR', details));
       }
       
       req.headers = value;

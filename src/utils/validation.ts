@@ -5,7 +5,7 @@
 
 import Joi from 'joi';
 import { Request, Response, NextFunction } from 'express';
-import ResponseUtil from './response';
+import { ErrorMiddleware } from '../middleware/error';
 
 export interface ValidationOptions {
   body?: Joi.ObjectSchema;
@@ -67,7 +67,8 @@ export class ValidationUtil {
       }
 
       if (Object.keys(errors).length > 0) {
-        return ResponseUtil.validationError(res, errors);
+        const err = ErrorMiddleware.createError('Validation failed', 422, 'VALIDATION_ERROR', errors);
+        return next(err);
       }
 
       next();
