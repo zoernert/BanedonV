@@ -157,6 +157,49 @@ router.put('/:id',
 );
 
 /**
+ * Update user (PATCH)
+ */
+router.patch('/:id',
+  AuthMiddleware.authenticate,
+  AuthMiddleware.selfOrAdmin('id'),
+  ValidationMiddleware.common.validateId,
+  async (req: Request, res: Response) => {
+    try {
+      const { id } = req.params;
+      const updateData = req.body;
+      
+      // Add realistic delay
+      await ResponseUtil.withDelay(async () => {
+        // Mock user update
+        const updatedUser = {
+          id: id,
+          email: updateData.email || `user${id}@example.com`,
+          name: updateData.name || `User ${id}`,
+          role: updateData.role || 'user',
+          avatar: updateData.avatar || `https://api.dicebear.com/7.x/initials/svg?seed=${id}`,
+          isActive: updateData.isActive !== undefined ? updateData.isActive : true,
+          createdAt: new Date(Date.now() - Math.random() * 86400000 * 365).toISOString(),
+          updatedAt: new Date().toISOString(),
+          permissions: updateData.permissions || []
+        };
+        
+        logger.info('User updated', {
+          userId: id,
+          updateData,
+          requestId: req.requestId,
+          requestorId: req.user?.id
+        });
+        
+        return ResponseUtil.success(res, updatedUser, 'User updated successfully');
+      });
+    } catch (error) {
+      logger.error('Update user error', { error: (error as Error).message, requestId: req.requestId });
+      ResponseUtil.internalServerError(res, 'Failed to update user');
+    }
+  }
+);
+
+/**
  * Delete user
  */
 router.delete('/:id',
@@ -169,9 +212,9 @@ router.delete('/:id',
       
       // Add realistic delay
       await ResponseUtil.withDelay(async () => {
-        // Prevent self-deletion
+        // Prevent deleting own account
         if (req.user?.id === id) {
-          return ResponseUtil.error(res, 'CANNOT_DELETE_SELF', 'Cannot delete your own account', 400);
+          return ResponseUtil.error(res, 'CANNOT_DELETE_OWN_ACCOUNT', 'Cannot delete your own account', 400);
         }
         
         logger.info('User deleted', {
