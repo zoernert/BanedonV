@@ -5,8 +5,13 @@
 
 import { Request, Response, NextFunction } from 'express';
 import Joi from 'joi';
-import { ValidationUtil } from '../utils/validation';
 import { ErrorMiddleware } from './error';
+import { billingSchemas } from '../validation-schemas/billing.schema';
+import { collectionSchemas } from '../validation-schemas/collection.schema';
+import { commonSchemas } from '../validation-schemas/common.schema';
+import { fileSchemas } from '../validation-schemas/file.schema';
+import { searchSchemas } from '../validation-schemas/search.schema';
+import { userSchemas } from '../validation-schemas/user.schema';
 
 export class ValidationMiddleware {
   /**
@@ -86,80 +91,68 @@ export class ValidationMiddleware {
   }
 
   /**
-   * Validate complete request
-   */
-  static validateRequest(schemas: {
-    body?: Joi.ObjectSchema;
-    params?: Joi.ObjectSchema;
-    query?: Joi.ObjectSchema;
-    headers?: Joi.ObjectSchema;
-  }) {
-    return ValidationUtil.validate(schemas);
-  }
-
-  /**
    * Common validation middleware
    */
   static common = {
     // ID parameter validation
     validateId: ValidationMiddleware.validateParams(
       Joi.object({
-        id: ValidationUtil.schemas.id
+        id: commonSchemas.id
       })
     ),
 
     // Pagination validation
     validatePagination: ValidationMiddleware.validateQuery(
-      ValidationUtil.schemas.pagination
+      commonSchemas.pagination
     ),
 
     // User validation
     validateUserRegistration: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.user.register
+      userSchemas.register
     ),
 
     validateUserLogin: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.user.login
+      userSchemas.login
     ),
 
     validateUserUpdate: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.user.update
+      userSchemas.update
     ),
 
     // Collection validation
     validateCollectionCreate: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.collection.create
+      collectionSchemas.create
     ),
 
     validateCollectionUpdate: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.collection.update
+      collectionSchemas.update
     ),
 
     // File validation
     validateFileUpload: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.file.upload
+      fileSchemas.upload
     ),
 
     validateFileUpdate: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.file.update
+      fileSchemas.update
     ),
 
     // Search validation
     validateSearchQuery: ValidationMiddleware.validateQuery(
-      ValidationUtil.schemas.search.query
+      searchSchemas.query
     ),
 
     validateSearchSuggestions: ValidationMiddleware.validateQuery(
-      ValidationUtil.schemas.search.suggestions
+      searchSchemas.suggestions
     ),
 
     // Billing validation
     validateBillingSubscribe: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.billing.subscribe
+      billingSchemas.subscribe
     ),
 
     validateBillingUpgrade: ValidationMiddleware.validateBody(
-      ValidationUtil.schemas.billing.upgrade
+      billingSchemas.upgrade
     )
   };
 }
