@@ -20,7 +20,7 @@ router.get('/',
   AuthMiddleware.authenticate,
   ValidationMiddleware.common.validateSearchQuery,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { q: query, type, owner, tags, fileType, dateRange, page, limit } = req.query as any;
+    const { q: query, type, owner, tags, fileType, dateRange, page, limit, collectionId } = req.query as any;
       
       await ResponseUtil.withDelay(async () => {
         // Mock search results
@@ -91,6 +91,12 @@ router.get('/',
         // Apply filters
         let filteredResults = mockResults;
         
+        if (collectionId) {
+          filteredResults = filteredResults.filter(result => 
+            result.type === 'file' && (result.metadata as any).collectionId === collectionId
+          );
+        }
+        
         if (type) {
           filteredResults = filteredResults.filter(result => result.type === type);
         }
@@ -140,6 +146,7 @@ router.get('/',
         logger.info('Search completed', {
           query,
           type,
+          collectionId,
           owner,
           tags,
           fileType,

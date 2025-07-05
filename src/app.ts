@@ -22,7 +22,6 @@ import ResponseUtil from './utils/response';
 import authRoutes from './routes/auth';
 import userRoutes from './routes/users';
 import collectionRoutes from './routes/collections';
-import fileRoutes from './routes/files';
 import searchRoutes from './routes/search';
 import billingRoutes from './routes/billing';
 import adminRoutes from './routes/admin';
@@ -146,7 +145,6 @@ export class App {
       // API routes with standard rate limiting
       this.app.use(`${apiPrefix}/users`, rateLimits.api, userRoutes);
       this.app.use(`${apiPrefix}/collections`, rateLimits.api, collectionRoutes);
-      this.app.use(`${apiPrefix}/files`, rateLimits.api, fileRoutes);
       this.app.use(`${apiPrefix}/search`, rateLimits.search, searchRoutes);
       this.app.use(`${apiPrefix}/billing`, rateLimits.api, billingRoutes);
       // Metrics for admin dashboard, requires authentication
@@ -158,7 +156,6 @@ export class App {
       this.app.use(`${apiPrefix}/auth`, authRoutes);
       this.app.use(`${apiPrefix}/users`, userRoutes);
       this.app.use(`${apiPrefix}/collections`, collectionRoutes);
-      this.app.use(`${apiPrefix}/files`, fileRoutes);
       this.app.use(`${apiPrefix}/search`, searchRoutes);
       this.app.use(`${apiPrefix}/billing`, billingRoutes);
       this.app.use(`${apiPrefix}/admin/metrics`, AuthMiddleware.authenticate, AuthMiddleware.adminOnly, metricsRoutes);
@@ -176,7 +173,6 @@ export class App {
           `${apiPrefix}/auth`,
           `${apiPrefix}/users`,
           `${apiPrefix}/collections`,
-          `${apiPrefix}/files`,
           `${apiPrefix}/search`,
           `${apiPrefix}/billing`,
           `${apiPrefix}/admin`,

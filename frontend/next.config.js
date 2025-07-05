@@ -9,6 +9,20 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/files',
+        destination: '/collections/files',
+        permanent: true,
+      },
+      {
+        source: '/files/:path*',
+        destination: '/collections/files/:path*',
+        permanent: true,
+      },
+    ];
+  },
   async rewrites() {
     return [
       {
