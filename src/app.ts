@@ -37,18 +37,10 @@ export class App {
 
   constructor() {
     this.app = express();
-    this.setupGlobalErrorHandlers();
     this.setupMiddleware();
     this.setupRoutes();
     this.setupStaticFiles();
     this.setupErrorHandlers();
-  }
-
-  /**
-   * Setup global error handlers
-   */
-  private setupGlobalErrorHandlers(): void {
-    ErrorMiddleware.setupGlobalHandlers();
   }
 
   /**
