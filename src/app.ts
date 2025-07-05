@@ -133,6 +133,7 @@ export class App {
     // Health and metrics routes (no rate limiting)
     this.app.use('/health', healthRoutes);
     this.app.use('/metrics', metricsRoutes);
+    this.app.use(`${apiPrefix}/metrics`, metricsRoutes);
 
     // API routes with rate limiting
     if (process.env.NODE_ENV !== 'test') {
