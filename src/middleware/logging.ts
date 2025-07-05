@@ -6,14 +6,14 @@
 import { Request, Response, NextFunction } from 'express';
 import morgan from 'morgan';
 import logger, { logRequest, logPerformance } from '../utils/logger';
-import { HelperUtil } from '../utils/helpers';
+import { generateRequestId } from '../utils/id.util';
 
 export class LoggingMiddleware {
   /**
    * Generate unique request ID
    */
   static generateRequestId(req: Request, res: Response, next: NextFunction): void {
-    const requestId = HelperUtil.generateRequestId();
+    const requestId = generateRequestId();
     req.requestId = requestId;
     res.locals.requestId = requestId;
     
