@@ -138,13 +138,16 @@ export class ValidationUtil {
     search: {
       query: Joi.object({
         q: Joi.string().min(1).max(200).required(),
-        type: Joi.string().valid('text', 'semantic', 'hybrid').default('text'),
-        collections: Joi.array().items(Joi.string()),
-        tags: Joi.array().items(Joi.string()),
-        dateFrom: Joi.date(),
-        dateTo: Joi.date(),
-        limit: Joi.number().integer().min(1).max(100).default(20),
-        page: Joi.number().integer().min(1).default(1)
+        type: Joi.string().valid('file', 'collection', 'user'),
+        owner: Joi.string().max(100),
+        tags: Joi.alternatives().try(Joi.string(), Joi.array().items(Joi.string())),
+        fileType: Joi.string().max(20),
+        dateRange: Joi.string().max(50),
+        page: Joi.number().integer().min(1).default(1),
+        limit: Joi.number().integer().min(1).max(100).default(20)
+      }),
+      suggestions: Joi.object({
+        q: Joi.string().min(1).max(200).required()
       })
     },
 

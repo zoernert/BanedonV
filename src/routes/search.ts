@@ -17,14 +17,9 @@ const router = Router();
  */
 router.get('/', 
   AuthMiddleware.authenticate,
-  ValidationMiddleware.common.validatePagination,
+  ValidationMiddleware.common.validateSearchQuery,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
-    const { q: query, type, owner, tags, fileType, dateRange } = req.query;
-    const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
-    
-    if (!query) {
-      return next(ErrorMiddleware.createError('Search query is required', 400, 'QUERY_REQUIRED'));
-    }
+    const { q: query, type, owner, tags, fileType, dateRange, page, limit } = req.query as any;
       
       await ResponseUtil.withDelay(async () => {
         // Mock search results
@@ -121,6 +116,21 @@ router.get('/',
           });
         }
         
+        if (dateRange) {
+          const now = new Date();
+          const daysMatch = (dateRange as string).match(/^(\d+)d$/);
+          if (daysMatch && daysMatch[1]) {
+            const days = parseInt(daysMatch[1], 10);
+            const startDate = new Date(now.getTime() - (days * 24 * 60 * 60 * 1000));
+            const startDateISO = startDate.toISOString();
+
+            filteredResults = filteredResults.filter(result => {
+              const metadata = result.metadata as any;
+              return metadata.createdAt && metadata.createdAt >= startDateISO;
+            });
+          }
+        }
+        
         // Sort by score
         filteredResults.sort((a, b) => b.score - a.score);
         
@@ -145,6 +155,53 @@ router.get('/',
           total
         });
       });
+  })
+);
+
+/**
+ * Get search filters
+ */
+router.get('/filters',
+  AuthMiddleware.authenticate,
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
+    // In a real app, these would be aggregated from the database
+    const mockFilters = {
+      fileTypes: ['pdf', 'docx', 'xlsx', 'pptx', 'txt', 'md'],
+      tags: ['important', 'project-x', 'research', 'draft', 'final', 'tech'],
+      dateRanges: [
+        { label: 'Past 24 hours', value: '1d' },
+        { label: 'Past week', value: '7d' },
+        { label: 'Past month', value: '30d' },
+        { label: 'Past year', value: '365d' }
+      ]
+    };
+
+    await ResponseUtil.withDelay(async () => {
+      ResponseUtil.success(res, mockFilters, 'Filters retrieved successfully');
+    });
+  })
+);
+
+/**
+ * Get search suggestions
+ */
+router.get('/suggestions',
+  AuthMiddleware.authenticate,
+  ValidationMiddleware.common.validateSearchSuggestions,
+  ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
+    const { q } = req.query as { q: string };
+
+    const mockSuggestions = [
+      `${q} in documents`,
+      `user profile for ${q}`,
+      `collections tagged with ${q}`,
+      `files uploaded by ${q}`,
+      `recent items related to ${q}`
+    ];
+
+    await ResponseUtil.withDelay(async () => {
+      ResponseUtil.success(res, mockSuggestions, 'Suggestions retrieved successfully');
+    });
   })
 );
 

@@ -149,6 +149,10 @@ export class ValidationMiddleware {
       ValidationUtil.schemas.search.query
     ),
 
+    validateSearchSuggestions: ValidationMiddleware.validateQuery(
+      ValidationUtil.schemas.search.suggestions
+    ),
+
     // Billing validation
     validateBillingSubscribe: ValidationMiddleware.validateBody(
       ValidationUtil.schemas.billing.subscribe
