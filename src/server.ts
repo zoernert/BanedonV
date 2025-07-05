@@ -6,6 +6,10 @@
 import App from './app';
 import logger from './utils/logger';
 import { serverConfig } from './config/server';
+import { ErrorMiddleware } from './middleware/error';
+
+// Setup global error handlers to run only once
+ErrorMiddleware.setupGlobalHandlers();
 
 // Create Express app
 const app = new App();
@@ -49,18 +53,6 @@ process.on('SIGINT', () => {
     logger.info('Server closed');
     process.exit(0);
   });
-});
-
-// Handle unhandled promise rejections
-process.on('unhandledRejection', (reason, promise) => {
-  logger.error('Unhandled Promise Rejection', { reason, promise });
-  process.exit(1);
-});
-
-// Handle uncaught exceptions
-process.on('uncaughtException', (error) => {
-  logger.error('Uncaught Exception', { error: error.message, stack: error.stack });
-  process.exit(1);
 });
 
 export default httpServer;
