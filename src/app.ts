@@ -133,7 +133,6 @@ export class App {
     // Health and metrics routes (no rate limiting)
     this.app.use('/health', healthRoutes);
     this.app.use('/metrics', metricsRoutes);
-    this.app.use(`${apiPrefix}/metrics`, metricsRoutes);
 
     // API routes with rate limiting
     if (process.env.NODE_ENV !== 'test') {
@@ -156,6 +155,8 @@ export class App {
       this.app.use(`${apiPrefix}/search`, rateLimits.search, searchRoutes);
       this.app.use(`${apiPrefix}/billing`, rateLimits.api, billingRoutes);
       this.app.use(`${apiPrefix}/admin`, rateLimits.api, adminRoutes);
+      // Metrics for admin dashboard, requires authentication
+      this.app.use(`${apiPrefix}/admin/metrics`, rateLimits.api, AuthMiddleware.authenticate, AuthMiddleware.adminOnly, metricsRoutes);
       this.app.use(`${apiPrefix}/integrations`, rateLimits.api, integrationRoutes);
     } else {
       // No rate limiting for test environment
@@ -166,6 +167,7 @@ export class App {
       this.app.use(`${apiPrefix}/search`, searchRoutes);
       this.app.use(`${apiPrefix}/billing`, billingRoutes);
       this.app.use(`${apiPrefix}/admin`, adminRoutes);
+      this.app.use(`${apiPrefix}/admin/metrics`, AuthMiddleware.authenticate, AuthMiddleware.adminOnly, metricsRoutes);
       this.app.use(`${apiPrefix}/integrations`, integrationRoutes);
     }
 
