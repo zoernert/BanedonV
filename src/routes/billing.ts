@@ -66,7 +66,7 @@ router.get('/invoices',
   AuthMiddleware.authenticate,
   ValidationMiddleware.common.validatePagination,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
-    const { page, limit } = ResponseUtil.parsePagination(req.query);
+    const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
     await ResponseUtil.withDelay(async () => {
       const mockInvoices = Array.from({ length: 15 }, (_, i) => ({
         id: `invoice_${i+1}`,
