@@ -7,6 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-07-05
+
+### Added
+- Implemented new search endpoints for suggestions (`/api/v1/search/suggestions`) and filters (`/api/v1/search/filters`).
+- Implemented missing mock API endpoints for `/api/v1/billing` and `/api/v1/users` to support frontend development.
+- Added a new public metrics endpoint at `/api/v1/metrics` for non-sensitive, public status monitoring.
+- Added comprehensive test suites for `search`, `billing`, `users`, and `metrics` endpoints.
+
+### Changed
+- Refactored all middleware to use a centralized `asyncHandler` and `next(error)` for consistent error handling, removing direct response generation.
+- Moved detailed, sensitive metrics to a new admin-only endpoint at `/api/v1/admin/metrics` and protected it with admin authentication.
+
+### Fixed
+- Resolved a server crash caused by a syntax error in the search routes.
+- Fixed a bug in the user registration logic that incorrectly checked for existing users.
+- Corrected the Next.js proxy configuration (`next.config.js`) to properly forward all API requests to the backend, resolving 404 errors.
+- Fixed a `ReferenceError` crash on startup by importing `AuthMiddleware` in `src/app.ts`.
+- Reordered route registration in `src/app.ts` to resolve a 404 error for the `/api/v1/admin/metrics` endpoint.
+- Disabled rate limiting during tests to prevent `429 Too Many Requests` errors and ensure test reliability.
+- Corrected numerous assertions and fixed test setup issues in the `auth` test suite to align with the latest API responses.
+
 ## [1.1.0] - 2025-07-05
 
 ### Added
