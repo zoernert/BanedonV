@@ -18,7 +18,7 @@ const router = Router();
  * Get all collections
  */
 router.get('/', 
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validatePagination,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
@@ -183,7 +183,7 @@ router.get('/',
  * Get all files (flat view)
  */
 router.get('/files', 
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validatePagination,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
@@ -463,7 +463,7 @@ router.get('/files',
  * Get recent files
  */
 router.get('/recent', 
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     await ResponseUtil.withDelay(async () => {
       // Mock recent file data with realistic files
@@ -545,7 +545,7 @@ router.get('/recent',
  * Get collections shared with the user
  */
 router.get('/shared', 
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
     
@@ -727,7 +727,7 @@ router.get('/shared',
  * Get file by ID
  */
 router.get('/files/:id',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -801,7 +801,7 @@ router.get('/files/:id',
  * Delete file by ID
  */
 router.delete('/files/:id',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -822,7 +822,7 @@ router.delete('/files/:id',
  * Get collection by ID
  */
 router.get('/:id',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -1002,7 +1002,7 @@ router.get('/:id',
  * Create collection
  */
 router.post('/',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { name, description, type = 'private', tags = [] } = req.body;
     
@@ -1050,7 +1050,7 @@ router.post('/',
  * Update collection
  */
 router.patch('/:id',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -1096,7 +1096,7 @@ router.patch('/:id',
  * Delete collection
  */
 router.delete('/:id',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
@@ -1117,7 +1117,7 @@ router.delete('/:id',
  * Get all files in a collection
  */
 router.get('/:id/files',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ValidationMiddleware.common.validatePagination,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
@@ -1375,7 +1375,7 @@ router.get('/:id/files',
  * Upload file to a collection
  */
 router.post('/:id/files',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { id: collectionId } = req.params;
