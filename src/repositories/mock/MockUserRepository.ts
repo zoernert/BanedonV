@@ -1,7 +1,7 @@
 import { IUserRepository } from '../interfaces/IUserRepository';
 import { User } from '../../domain/models/User';
 import { CreateUserDto } from '../../domain/dtos/CreateUser.dto';
-import { mockUsers } from '../../config/auth';
+import { mockUsers } from '../../data/mock/users';
 import { generateId } from '../../utils/id.util';
 import ResponseUtil from '../../utils/response';
 import { PaginationOptions, PaginatedResult } from '../../domain/types';

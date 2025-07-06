@@ -26,41 +26,6 @@ export const authConfig: AuthConfig = {
   passwordResetExpires: 3600000 // 1 hour in milliseconds
 };
 
-export const mockUsers = [
-  {
-    id: 'user_1',
-    email: 'admin@banedonv.com',
-    password: 'admin123', // Will be hashed
-    role: 'admin',
-    name: 'BanedonV Admin',
-    active: true,
-    lastLogin: null,
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'user_2',
-    email: 'user@banedonv.com',
-    password: 'user123', // Will be hashed
-    role: 'user',
-    name: 'Demo User',
-    active: true,
-    lastLogin: null,
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  },
-  {
-    id: 'user_3',
-    email: 'manager@banedonv.com',
-    password: 'manager123', // Will be hashed
-    role: 'manager',
-    name: 'Team Manager',
-    active: true,
-    lastLogin: null,
-    createdAt: '2024-01-01T00:00:00Z',
-    updatedAt: '2024-01-01T00:00:00Z'
-  }
-];
 
 export const roles = {
   admin: {
