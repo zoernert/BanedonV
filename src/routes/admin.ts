@@ -9,7 +9,7 @@ import ResponseUtil from '../utils/response';
 
 const router = Router();
 
-router.get('/dashboard', AuthMiddleware.authenticate, AuthMiddleware.adminOnly, async (req: Request, res: Response) => {
+router.get('/dashboard', AuthMiddleware.mockAuthenticate, AuthMiddleware.adminOnly, async (req: Request, res: Response) => {
   await ResponseUtil.withDelay(async () => {
     const mockDashboard = {
       totalUsers: 1000,

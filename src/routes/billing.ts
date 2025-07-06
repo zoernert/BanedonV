@@ -12,7 +12,7 @@ import ResponseUtil from '../utils/response';
 const router = Router();
 
 router.get('/subscription',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     await ResponseUtil.withDelay(async () => {
       const mockSubscription = {
@@ -29,7 +29,7 @@ router.get('/subscription',
 );
 
 router.get('/plans',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     await ResponseUtil.withDelay(async () => {
       const mockPlans = [
@@ -43,7 +43,7 @@ router.get('/plans',
 );
 
 router.post('/subscribe',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateBillingSubscribe,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { planId } = req.body;
@@ -54,7 +54,7 @@ router.post('/subscribe',
 );
 
 router.post('/cancel-subscription',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     await ResponseUtil.withDelay(async () => {
       return ResponseUtil.success(res, { status: 'subscription_cancelled' }, 'Subscription cancelled successfully');
@@ -63,7 +63,7 @@ router.post('/cancel-subscription',
 );
 
 router.get('/invoices',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validatePagination,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { page = 1, limit = 20 } = ResponseUtil.parsePagination(req.query);
@@ -82,7 +82,7 @@ router.get('/invoices',
 );
 
 router.put('/payment-method',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     await ResponseUtil.withDelay(async () => {
       return ResponseUtil.success(res, { status: 'payment_method_updated' }, 'Payment method updated successfully');

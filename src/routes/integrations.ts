@@ -9,7 +9,7 @@ import ResponseUtil from '../utils/response';
 
 const router = Router();
 
-router.get('/', AuthMiddleware.authenticate, async (req: Request, res: Response) => {
+router.get('/', AuthMiddleware.mockAuthenticate, async (req: Request, res: Response) => {
   await ResponseUtil.withDelay(async () => {
     const mockIntegrations = [
       {
