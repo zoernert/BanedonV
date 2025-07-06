@@ -53,6 +53,8 @@ declare global {
     generateMockUser: () => any;
     generateMockRequest: () => any;
     generateMockResponse: () => any;
+    getAuthHeaders: () => { Authorization: string };
+    getAdminAuthHeaders: () => { Authorization: string };
   };
 }
 
@@ -89,5 +91,13 @@ global.testUtils = {
       statusCode: 200
     };
     return res;
-  }
+  },
+
+  getAuthHeaders: () => ({
+    Authorization: 'Bearer mock_user_token'
+  }),
+
+  getAdminAuthHeaders: () => ({
+    Authorization: 'Bearer mock_admin_token'
+  })
 };

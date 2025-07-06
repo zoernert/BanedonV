@@ -1,6 +1,11 @@
 /**
- * Logging Middleware
- * Request/response logging with comprehensive tracking
+ * @fileoverview Logging Middleware
+ * Comprehensive request/response logging and performance tracking middleware.
+ * Provides request ID generation, timing measurements, and detailed logging.
+ * 
+ * @author BanedonV Development Team
+ * @version 1.4.1
+ * @since 1.0.0
  */
 
 import { Request, Response, NextFunction } from 'express';
@@ -8,9 +13,29 @@ import morgan from 'morgan';
 import logger, { logRequest, logPerformance } from '../utils/logger';
 import { generateRequestId } from '../utils/id.util';
 
+/**
+ * Logging Middleware Class
+ * 
+ * Provides comprehensive logging functionality including:
+ * - Request ID generation and tracking
+ * - Request/response timing measurements
+ * - Detailed HTTP request logging
+ * - Performance monitoring and alerts
+ * - Custom log formatting
+ * 
+ * @class LoggingMiddleware
+ */
 export class LoggingMiddleware {
   /**
-   * Generate unique request ID
+   * Generates a unique request ID and attaches it to request/response
+   * 
+   * @param {Request} req - Express request object
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next function
+   * @returns {void}
+   * 
+   * @example
+   * app.use(LoggingMiddleware.generateRequestId);
    */
   static generateRequestId(req: Request, res: Response, next: NextFunction): void {
     const requestId = generateRequestId();
@@ -24,7 +49,15 @@ export class LoggingMiddleware {
   }
 
   /**
-   * Request timing middleware
+   * Request timing middleware - measures request duration and logs performance
+   * 
+   * @param {Request} req - Express request object
+   * @param {Response} res - Express response object
+   * @param {NextFunction} next - Express next function
+   * @returns {void}
+   * 
+   * @example
+   * app.use(LoggingMiddleware.requestTiming);
    */
   static requestTiming(req: Request, res: Response, next: NextFunction): void {
     const startTime = Date.now();

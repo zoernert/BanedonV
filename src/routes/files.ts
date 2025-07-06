@@ -7,9 +7,16 @@ import { Router } from 'express';
 import { AuthMiddleware } from '../middleware/auth';
 import { ValidationMiddleware } from '../middleware/validation';
 import { ErrorMiddleware } from '../middleware/error';
-import { FileController } from '../controllers/file.controller';
+import { FileController } from '../controllers/FileController';
+import { FileService } from '../services/FileService';
+import { MockFileRepository } from '../repositories/mock/MockFileRepository';
 
 const router = Router();
+
+// Initialize dependencies
+const fileRepository = new MockFileRepository();
+const fileService = new FileService(fileRepository);
+const fileController = new FileController(fileService);
 
 /**
  * Get all files (flat view)
@@ -18,7 +25,7 @@ const router = Router();
 router.get('/', 
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validatePagination,
-  ErrorMiddleware.asyncHandler(FileController.getAllFiles)
+  ErrorMiddleware.asyncHandler(fileController.getAllFiles.bind(fileController))
 );
 
 /**
@@ -27,7 +34,7 @@ router.get('/',
  */
 router.get('/recent', 
   AuthMiddleware.mockAuthenticate,
-  ErrorMiddleware.asyncHandler(FileController.getRecentFiles)
+  ErrorMiddleware.asyncHandler(fileController.getRecentFiles.bind(fileController))
 );
 
 /**
@@ -37,7 +44,7 @@ router.get('/recent',
 router.get('/:id',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
-  ErrorMiddleware.asyncHandler(FileController.getFileById)
+  ErrorMiddleware.asyncHandler(fileController.getFileById.bind(fileController))
 );
 
 /**
@@ -47,7 +54,7 @@ router.get('/:id',
 router.delete('/:id',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
-  ErrorMiddleware.asyncHandler(FileController.deleteFileById)
+  ErrorMiddleware.asyncHandler(fileController.deleteFile.bind(fileController))
 );
 
 export default router;

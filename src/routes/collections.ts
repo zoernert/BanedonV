@@ -7,9 +7,16 @@ import { Router } from 'express';
 import { AuthMiddleware } from '../middleware/auth';
 import { ValidationMiddleware } from '../middleware/validation';
 import { ErrorMiddleware } from '../middleware/error';
-import { CollectionController } from '../controllers/collection.controller';
+import { CollectionController } from '../controllers/CollectionController';
+import { CollectionService } from '../services/CollectionService';
+import { MockCollectionRepository } from '../repositories/mock/MockCollectionRepository';
 
 const router = Router();
+
+// Dependency injection setup
+const collectionRepository = new MockCollectionRepository();
+const collectionService = new CollectionService(collectionRepository);
+const collectionController = new CollectionController(collectionService);
 
 /**
  * Get all collections
@@ -17,7 +24,7 @@ const router = Router();
 router.get('/', 
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validatePagination,
-  ErrorMiddleware.asyncHandler(CollectionController.getAllCollections)
+  (req, res, next) => collectionController.getAllCollections(req, res, next)
 );
 
 /**
@@ -26,7 +33,7 @@ router.get('/',
 router.get('/shared', 
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validatePagination,
-  ErrorMiddleware.asyncHandler(CollectionController.getSharedCollections)
+  (req, res, next) => collectionController.getSharedCollections(req, res, next)
 );
 
 /**
@@ -34,7 +41,7 @@ router.get('/shared',
  */
 router.post('/',
   AuthMiddleware.mockAuthenticate,
-  ErrorMiddleware.asyncHandler(CollectionController.createCollection)
+  (req, res, next) => collectionController.createCollection(req, res, next)
 );
 
 /**
@@ -43,7 +50,7 @@ router.post('/',
 router.get('/:id',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
-  ErrorMiddleware.asyncHandler(CollectionController.getCollectionById)
+  (req, res, next) => collectionController.getCollectionById(req, res, next)
 );
 
 /**
@@ -52,7 +59,7 @@ router.get('/:id',
 router.patch('/:id',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
-  ErrorMiddleware.asyncHandler(CollectionController.updateCollection)
+  (req, res, next) => collectionController.updateCollection(req, res, next)
 );
 
 /**
@@ -61,7 +68,7 @@ router.patch('/:id',
 router.delete('/:id',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
-  ErrorMiddleware.asyncHandler(CollectionController.deleteCollection)
+  (req, res, next) => collectionController.deleteCollection(req, res, next)
 );
 
 /**
@@ -71,7 +78,7 @@ router.get('/:id/files',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
   ValidationMiddleware.common.validatePagination,
-  ErrorMiddleware.asyncHandler(CollectionController.getCollectionFiles)
+  (req, res, next) => collectionController.getCollectionFiles(req, res, next)
 );
 
 /**
@@ -80,7 +87,7 @@ router.get('/:id/files',
 router.post('/:id/files',
   AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateId,
-  ErrorMiddleware.asyncHandler(CollectionController.uploadFileToCollection)
+  (req, res, next) => collectionController.uploadFileToCollection(req, res, next)
 );
 
 export default router;
