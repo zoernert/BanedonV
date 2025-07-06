@@ -244,14 +244,14 @@ describe('AuthMiddleware', () => {
         id: 'user_1',
         email: 'manager@example.com',
         name: 'Manager User',
-        role: 'manager',
+        role: 'team_manager',
         active: true,
         lastLogin: new Date().toISOString(),
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString()
       };
 
-      const middleware = AuthMiddleware.authorize(['admin', 'manager']);
+      const middleware = AuthMiddleware.authorize(['admin', 'team_manager']);
       middleware(mockRequest as Request, mockResponse as Response, mockNext);
 
       expect(mockNext).toHaveBeenCalledWith();
@@ -277,7 +277,7 @@ describe('AuthMiddleware', () => {
 
       AuthMiddleware.managerOrAdmin(mockRequest as Request, mockResponse as Response, mockNext);
 
-      expect(authorizeSpy).toHaveBeenCalledWith(['admin', 'manager']);
+      expect(authorizeSpy).toHaveBeenCalledWith(['admin', 'team_manager']);
       authorizeSpy.mockRestore();
     });
   });

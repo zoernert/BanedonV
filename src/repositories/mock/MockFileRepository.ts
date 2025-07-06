@@ -29,7 +29,7 @@ export class MockFileRepository implements IFileRepository {
           id: 'user_1',
           email: 'sarah.johnson@banedonv.com',
           name: 'Sarah Johnson',
-          role: 'manager',
+          role: 'team_manager',
           active: true,
           createdAt: new Date().toISOString()
         },

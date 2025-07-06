@@ -79,7 +79,7 @@ router.get('/',
             highlights: [`...matches ${query}...`],
             metadata: {
               email: `user${i + 1}@example.com`,
-              role: ['admin', 'manager', 'user'][i % 3],
+              role: ['admin', 'team_manager', 'user'][i % 3],
               lastLogin: new Date(Date.now() - randomFloat(0, 86400000 * 7)).toISOString(),
               createdAt: new Date(Date.now() - randomFloat(0, 86400000 * 365)).toISOString(),
               collectionsCount: randomInt(0, 19),

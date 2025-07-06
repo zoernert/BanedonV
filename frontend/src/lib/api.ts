@@ -232,6 +232,95 @@ class ApiClient {
     const response = await this.client.patch(`/admin/users/${userId}/activate`);
     return response.data;
   }
+
+  // Team management methods
+  async createTeam(teamData: any) {
+    const response = await this.client.post('/teams', teamData);
+    return response.data;
+  }
+
+  async getTeams(params?: any) {
+    const response = await this.client.get('/teams', { params });
+    return response.data;
+  }
+
+  async getMyTeams() {
+    const response = await this.client.get('/teams/my');
+    return response.data;
+  }
+
+  async getTeamById(id: string) {
+    const response = await this.client.get(`/teams/${id}`);
+    return response.data;
+  }
+
+  async updateTeam(id: string, updates: any) {
+    const response = await this.client.patch(`/teams/${id}`, updates);
+    return response.data;
+  }
+
+  async deleteTeam(id: string) {
+    await this.client.delete(`/teams/${id}`);
+  }
+
+  async inviteToTeam(teamId: string, invitation: any) {
+    const response = await this.client.post(`/teams/${teamId}/invite`, invitation);
+    return response.data;
+  }
+
+  async getTeamInvitations(teamId: string) {
+    const response = await this.client.get(`/teams/${teamId}/invitations`);
+    return response.data;
+  }
+
+  async joinTeam(teamId: string) {
+    await this.client.post(`/teams/${teamId}/join`);
+  }
+
+  async leaveTeam(teamId: string) {
+    await this.client.post(`/teams/${teamId}/leave`);
+  }
+
+  async removeMember(teamId: string, userId: string) {
+    await this.client.delete(`/teams/${teamId}/members/${userId}`);
+  }
+
+  async updateMemberRole(teamId: string, userId: string, role: string) {
+    await this.client.patch(`/teams/${teamId}/members/${userId}/role`, { role });
+  }
+
+  async getTeamMembers(teamId: string) {
+    const response = await this.client.get(`/teams/${teamId}/members`);
+    return response.data;
+  }
+
+  async getPendingTeams() {
+    const response = await this.client.get('/teams/pending');
+    return response.data;
+  }
+
+  async approveTeam(teamId: string) {
+    const response = await this.client.post(`/teams/${teamId}/approve`);
+    return response.data;
+  }
+
+  async rejectTeam(teamId: string, reason?: string) {
+    await this.client.post(`/teams/${teamId}/reject`, { reason });
+  }
+
+  async getTeamStats(teamId: string) {
+    const response = await this.client.get(`/teams/${teamId}/stats`);
+    return response.data;
+  }
+
+  async getPublicTeams(params?: any) {
+    const response = await this.client.get('/teams/public', { params });
+    return response.data;
+  }
+
+  async requestToJoinTeam(teamId: string, message?: string) {
+    await this.client.post(`/teams/${teamId}/request`, { message });
+  }
 }
 
 export const apiClient = new ApiClient();

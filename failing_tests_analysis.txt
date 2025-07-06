@@ -1,0 +1,694 @@
+FAIL tests/utils/logger-enhanced.test.ts
+    expect(jest.fn()).toHaveBeenCalled()
+    Expected number of calls: >= 1
+    > 85 |       expect(winston.createLogger).toHaveBeenCalled();
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:85:36)
+    expect(jest.fn()).toHaveBeenCalled()
+    Expected number of calls: >= 1
+    > 89 |       expect(winston.addColors).toHaveBeenCalled();
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:89:33)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request", ObjectContaining {"contentLength": "1024", "ip": "127.0.0.1", "method": "GET", "requestId": "req-123", "responseTime": 150, "statusCode": 200, "url": "/api/test", "userAgent": "test-agent", "userId": "user123"}
+    > 110 |       expect(mockLogger.info).toHaveBeenCalledWith('HTTP Request', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:110:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request Error", ObjectContaining {"method": "POST", "responseTime": 300, "statusCode": 500, "url": "/api/error"}
+    > 137 |       expect(mockLogger.error).toHaveBeenCalledWith('HTTP Request Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:137:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": {"module": "test"}, "error": {"message": "Test error", "name": "Error", "stack": Any<String>}}
+    > 153 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:153:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": undefined, "error": {"message": "Another test error", "name": "Error", "stack": Any<String>}}
+    > 168 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:168:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Performance Warning", ObjectContaining {"context": {"query": "SELECT * FROM users"}, "duration": 1500, "operation": "database-query"}
+    > 197 |       expect(mockLogger.warn).toHaveBeenCalledWith('Performance Warning', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:197:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "login", "context": {"ip": "127.0.0.1"}, "success": true, "userId": "user123"}
+    > 213 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:213:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Failure", ObjectContaining {"action": "login", "success": false, "userId": "user123"}
+    > 227 |       expect(mockLogger.warn).toHaveBeenCalledWith('Authentication Failure', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:227:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "logout", "success": true}
+    > 239 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:239:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/users", "method": "GET", "responseTime": 200, "userId": "user123"}
+    > 255 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:255:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/public", "method": "POST", "responseTime": undefined, "userId": undefined}
+    > 269 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:269:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": {"attempts": 5, "ip": "192.168.1.1"}, "event": "suspicious-activity", "severity": "high"}
+    > 286 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:286:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": undefined, "event": "rate-limit-exceeded", "severity": "medium"}
+    > 299 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:299:31)
+FAIL tests/utils/logger-working.test.ts
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+FAIL tests/utils/logger-fixed.test.ts
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request", ObjectContaining {"contentLength": "1024", "ip": "127.0.0.1", "method": "GET", "requestId": "req-123", "responseTime": 150, "statusCode": 200, "url": "/api/test", "userAgent": "test-agent", "userId": "user123"}
+    > 81 |       expect(mockLogger.info).toHaveBeenCalledWith('HTTP Request', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:81:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request Error", ObjectContaining {"method": "POST", "responseTime": 300, "statusCode": 500, "url": "/api/error"}
+    > 109 |       expect(mockLogger.error).toHaveBeenCalledWith('HTTP Request Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:109:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": {"module": "test"}, "error": {"message": "Test error", "name": "Error", "stack": Any<String>}}
+    > 125 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:125:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": undefined, "error": {"message": "Another test error", "name": "Error", "stack": Any<String>}}
+    > 140 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:140:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Performance Warning", ObjectContaining {"context": {"query": "SELECT * FROM users"}, "duration": 1500, "operation": "database-query"}
+    > 159 |       expect(mockLogger.warn).toHaveBeenCalledWith('Performance Warning', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:159:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Performance Info", ObjectContaining {"duration": 50, "operation": "cache-hit"}
+    > 172 |       expect(mockLogger.info).toHaveBeenCalledWith('Performance Info', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:172:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "login", "context": {"ip": "127.0.0.1"}, "success": true, "userId": "user123"}
+    > 187 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:187:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Failure", ObjectContaining {"action": "login", "success": false, "userId": "user123"}
+    > 201 |       expect(mockLogger.warn).toHaveBeenCalledWith('Authentication Failure', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:201:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "logout", "success": true}
+    > 213 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:213:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/users", "method": "GET", "responseTime": 200, "userId": "user123"}
+    > 229 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:229:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/public", "method": "POST", "responseTime": undefined, "userId": undefined}
+    > 243 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:243:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": {"attempts": 5, "ip": "192.168.1.1"}, "event": "suspicious-activity", "severity": "high"}
+    > 260 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:260:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": undefined, "event": "rate-limit-exceeded", "severity": "medium"}
+    > 273 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:273:31)
+FAIL tests/teams.test.ts (32.585 s)
+    expected 404 "Not Found", got 500 "Internal Server Error"
+    > 145 |         .expect(404);
+      147 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:145:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 200 "OK"
+    > 155 |         .expect(403);
+      157 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:155:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 200 "OK"
+    > 190 |         .expect(403);
+      192 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:190:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 200 "OK"
+    > 212 |         .expect(403);
+      214 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:212:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 231 |         .expect(200);
+      233 |       expect(response.body.success).toBe(true);
+      234 |       expect(response.body.data.email).toBe(inviteData.email);
+      at Object.<anonymous> (tests/teams.test.ts:231:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 247 |         .expect(403);
+      249 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:247:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 262 |         .expect(200);
+      264 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:262:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 276 |         .expect(403);
+      278 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:276:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 288 |         .expect(200);
+      290 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:288:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 298 |         .expect(200);
+      300 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:298:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 308 |         .expect(403);
+      310 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:308:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 320 |         .expect(200);
+      322 |       expect(response.body.success).toBe(true);
+      323 |       expect(response.body.data).toHaveProperty('invitations');
+      at Object.<anonymous> (tests/teams.test.ts:320:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 332 |         .expect(403);
+      334 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:332:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 344 |         .expect(200);
+      346 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:344:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 354 |         .expect(403);
+      356 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:354:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 369 |         .expect(200);
+      371 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:369:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 381 |         .expect(200);
+      383 |       expect(response.body.success).toBe(true);
+      384 |       expect(response.body.data).toHaveProperty('requests');
+      at Object.<anonymous> (tests/teams.test.ts:381:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 395 |         .expect(200);
+      397 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:395:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 410 |         .expect(200);
+      412 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:410:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 422 |         .expect(200);
+      424 |       expect(response.body.success).toBe(true);
+      425 |       expect(response.body.data).toHaveProperty('analytics');
+      at Object.<anonymous> (tests/teams.test.ts:422:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 436 |         .expect(403);
+      438 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:436:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 448 |         .expect(200);
+      450 |       expect(response.body.success).toBe(true);
+      451 |       expect(response.body.data).toHaveProperty('stats');
+      at Object.<anonymous> (tests/teams.test.ts:448:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+FAIL tests/utils/logger-enhanced.test.ts
+    expect(jest.fn()).toHaveBeenCalled()
+    Expected number of calls: >= 1
+    > 85 |       expect(winston.createLogger).toHaveBeenCalled();
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:85:36)
+    expect(jest.fn()).toHaveBeenCalled()
+    Expected number of calls: >= 1
+    > 89 |       expect(winston.addColors).toHaveBeenCalled();
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:89:33)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request", ObjectContaining {"contentLength": "1024", "ip": "127.0.0.1", "method": "GET", "requestId": "req-123", "responseTime": 150, "statusCode": 200, "url": "/api/test", "userAgent": "test-agent", "userId": "user123"}
+    > 110 |       expect(mockLogger.info).toHaveBeenCalledWith('HTTP Request', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:110:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request Error", ObjectContaining {"method": "POST", "responseTime": 300, "statusCode": 500, "url": "/api/error"}
+    > 137 |       expect(mockLogger.error).toHaveBeenCalledWith('HTTP Request Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:137:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": {"module": "test"}, "error": {"message": "Test error", "name": "Error", "stack": Any<String>}}
+    > 153 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:153:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": undefined, "error": {"message": "Another test error", "name": "Error", "stack": Any<String>}}
+    > 168 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:168:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Performance Warning", ObjectContaining {"context": {"query": "SELECT * FROM users"}, "duration": 1500, "operation": "database-query"}
+    > 197 |       expect(mockLogger.warn).toHaveBeenCalledWith('Performance Warning', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:197:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "login", "context": {"ip": "127.0.0.1"}, "success": true, "userId": "user123"}
+    > 213 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:213:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Failure", ObjectContaining {"action": "login", "success": false, "userId": "user123"}
+    > 227 |       expect(mockLogger.warn).toHaveBeenCalledWith('Authentication Failure', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:227:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "logout", "success": true}
+    > 239 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:239:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/users", "method": "GET", "responseTime": 200, "userId": "user123"}
+    > 255 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:255:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/public", "method": "POST", "responseTime": undefined, "userId": undefined}
+    > 269 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:269:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": {"attempts": 5, "ip": "192.168.1.1"}, "event": "suspicious-activity", "severity": "high"}
+    > 286 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:286:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": undefined, "event": "rate-limit-exceeded", "severity": "medium"}
+    > 299 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-enhanced.test.ts:299:31)
+FAIL tests/utils/logger-working.test.ts
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+    TypeError: logger.setLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:16:12)
+    TypeError: logger.resetLogger is not a function
+      at Object.<anonymous> (tests/utils/logger-working.test.ts:21:12)
+FAIL tests/utils/logger-fixed.test.ts
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request", ObjectContaining {"contentLength": "1024", "ip": "127.0.0.1", "method": "GET", "requestId": "req-123", "responseTime": 150, "statusCode": 200, "url": "/api/test", "userAgent": "test-agent", "userId": "user123"}
+    > 81 |       expect(mockLogger.info).toHaveBeenCalledWith('HTTP Request', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:81:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "HTTP Request Error", ObjectContaining {"method": "POST", "responseTime": 300, "statusCode": 500, "url": "/api/error"}
+    > 109 |       expect(mockLogger.error).toHaveBeenCalledWith('HTTP Request Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:109:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": {"module": "test"}, "error": {"message": "Test error", "name": "Error", "stack": Any<String>}}
+    > 125 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:125:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Application Error", ObjectContaining {"context": undefined, "error": {"message": "Another test error", "name": "Error", "stack": Any<String>}}
+    > 140 |       expect(mockLogger.error).toHaveBeenCalledWith('Application Error', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:140:32)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Performance Warning", ObjectContaining {"context": {"query": "SELECT * FROM users"}, "duration": 1500, "operation": "database-query"}
+    > 159 |       expect(mockLogger.warn).toHaveBeenCalledWith('Performance Warning', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:159:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Performance Info", ObjectContaining {"duration": 50, "operation": "cache-hit"}
+    > 172 |       expect(mockLogger.info).toHaveBeenCalledWith('Performance Info', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:172:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "login", "context": {"ip": "127.0.0.1"}, "success": true, "userId": "user123"}
+    > 187 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:187:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Failure", ObjectContaining {"action": "login", "success": false, "userId": "user123"}
+    > 201 |       expect(mockLogger.warn).toHaveBeenCalledWith('Authentication Failure', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:201:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Authentication Event", ObjectContaining {"action": "logout", "success": true}
+    > 213 |       expect(mockLogger.info).toHaveBeenCalledWith('Authentication Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:213:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/users", "method": "GET", "responseTime": 200, "userId": "user123"}
+    > 229 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:229:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "API Usage", ObjectContaining {"endpoint": "/api/public", "method": "POST", "responseTime": undefined, "userId": undefined}
+    > 243 |       expect(mockLogger.info).toHaveBeenCalledWith('API Usage', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:243:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": {"attempts": 5, "ip": "192.168.1.1"}, "event": "suspicious-activity", "severity": "high"}
+    > 260 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:260:31)
+    expect(jest.fn()).toHaveBeenCalledWith(...expected)
+    Expected: "Security Event", ObjectContaining {"context": undefined, "event": "rate-limit-exceeded", "severity": "medium"}
+    > 273 |       expect(mockLogger.warn).toHaveBeenCalledWith('Security Event', expect.objectContaining({
+      at Object.<anonymous> (tests/utils/logger-fixed.test.ts:273:31)
+FAIL tests/teams.test.ts (32.585 s)
+    expected 404 "Not Found", got 500 "Internal Server Error"
+    > 145 |         .expect(404);
+      147 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:145:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 200 "OK"
+    > 155 |         .expect(403);
+      157 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:155:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 200 "OK"
+    > 190 |         .expect(403);
+      192 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:190:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 200 "OK"
+    > 212 |         .expect(403);
+      214 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:212:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 231 |         .expect(200);
+      233 |       expect(response.body.success).toBe(true);
+      234 |       expect(response.body.data.email).toBe(inviteData.email);
+      at Object.<anonymous> (tests/teams.test.ts:231:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 247 |         .expect(403);
+      249 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:247:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 262 |         .expect(200);
+      264 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:262:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 276 |         .expect(403);
+      278 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:276:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 288 |         .expect(200);
+      290 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:288:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 298 |         .expect(200);
+      300 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:298:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 308 |         .expect(403);
+      310 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:308:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 320 |         .expect(200);
+      322 |       expect(response.body.success).toBe(true);
+      323 |       expect(response.body.data).toHaveProperty('invitations');
+      at Object.<anonymous> (tests/teams.test.ts:320:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 332 |         .expect(403);
+      334 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:332:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 344 |         .expect(200);
+      346 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:344:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 354 |         .expect(403);
+      356 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:354:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 369 |         .expect(200);
+      371 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:369:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 381 |         .expect(200);
+      383 |       expect(response.body.success).toBe(true);
+      384 |       expect(response.body.data).toHaveProperty('requests');
+      at Object.<anonymous> (tests/teams.test.ts:381:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 395 |         .expect(200);
+      397 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:395:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 410 |         .expect(200);
+      412 |       expect(response.body.success).toBe(true);
+      at Object.<anonymous> (tests/teams.test.ts:410:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 422 |         .expect(200);
+      424 |       expect(response.body.success).toBe(true);
+      425 |       expect(response.body.data).toHaveProperty('analytics');
+      at Object.<anonymous> (tests/teams.test.ts:422:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 403 "Forbidden", got 500 "Internal Server Error"
+    > 436 |         .expect(403);
+      438 |       expect(response.body.success).toBe(false);
+      at Object.<anonymous> (tests/teams.test.ts:436:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)
+    expected 200 "OK", got 500 "Internal Server Error"
+    > 448 |         .expect(200);
+      450 |       expect(response.body.success).toBe(true);
+      451 |       expect(response.body.data).toHaveProperty('stats');
+      at Object.<anonymous> (tests/teams.test.ts:448:10)
+      at Test._assertStatus (node_modules/supertest/lib/test.js:267:14)
+      at node_modules/supertest/lib/test.js:323:13
+      at Test._assertFunction (node_modules/supertest/lib/test.js:300:13)
+      at Test.assert (node_modules/supertest/lib/test.js:179:23)
+      at Server.localAssert (node_modules/supertest/lib/test.js:135:14)

@@ -81,7 +81,7 @@ describe('Server', () => {
   it('should log server start information when imported', () => {
     // Re-import to trigger logging
     jest.isolateModules(() => {
-      require('../../src/server');
+      require('../src/server');
     });
     
     expect(logger.info).toHaveBeenCalledWith('BanedonV Mock Server started', expect.objectContaining({
@@ -97,7 +97,7 @@ describe('Server', () => {
   it('should log available endpoints when imported', () => {
     // Re-import to trigger logging
     jest.isolateModules(() => {
-      require('../../src/server');
+      require('../src/server');
     });
     
     expect(logger.info).toHaveBeenCalledWith('Available endpoints:', expect.objectContaining({
@@ -113,7 +113,7 @@ describe('Server', () => {
     
     // Re-import to test with new env
     jest.isolateModules(() => {
-      require('../../src/server');
+      require('../src/server');
     });
     
     expect(logger.info).toHaveBeenCalledWith('BanedonV Mock Server started', expect.objectContaining({
@@ -126,7 +126,7 @@ describe('Server', () => {
     
     // Re-import to test with new env
     jest.isolateModules(() => {
-      require('../../src/server');
+      require('../src/server');
     });
     
     expect(logger.info).toHaveBeenCalledWith('BanedonV Mock Server started', expect.objectContaining({
@@ -141,7 +141,7 @@ describe('Server', () => {
 
     // Import server to set up handlers
     jest.isolateModules(() => {
-      require('../../src/server');
+      require('../src/server');
     });
 
     // Simulate SIGTERM
@@ -165,7 +165,7 @@ describe('Server', () => {
 
     // Import server to set up handlers
     jest.isolateModules(() => {
-      require('../../src/server');
+      require('../src/server');
     });
 
     // Simulate SIGINT

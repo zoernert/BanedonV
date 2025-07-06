@@ -21,12 +21,16 @@ export interface User {
   id: string;
   email: string;
   name: string;
-  role: 'admin' | 'manager' | 'user';
+  role: 'admin' | 'org_admin' | 'team_manager' | 'user';
   avatar?: string;
   createdAt: string;
   updatedAt: string;
   isActive: boolean;
   permissions?: string[];
+  // New team management fields
+  managedTeams?: string[];
+  departmentScope?: string;
+  organizationPermissions?: string[];
 }
 
 export interface AuthUser extends User {
@@ -213,4 +217,107 @@ export interface Notification {
   read: boolean;
   actionUrl?: string;
   actionText?: string;
+}
+
+// Team Management Types
+export interface Team {
+  id: string;
+  name: string;
+  description?: string;
+  type: 'personal' | 'departmental' | 'organizational';
+  visibility: 'private' | 'department' | 'organization';
+  owner: User;
+  managers: User[];
+  members: TeamMember[];
+  createdAt: string;
+  updatedAt: string;
+  maxMembers: number;
+  settings: TeamSettings;
+  approvalStatus?: 'pending' | 'approved' | 'rejected';
+  approvedBy?: User;
+  memberCount?: number;
+  activityCount?: number;
+}
+
+export interface TeamMember {
+  id: string;
+  user: User;
+  role: 'admin' | 'member' | 'viewer';
+  joinedAt: string;
+  invitedBy: User;
+  status: 'active' | 'pending' | 'inactive';
+}
+
+export interface TeamSettings {
+  allowInvitations: boolean;
+  requireApprovalForJoin: boolean;
+  allowFileSharing: boolean;
+  allowCollectionSharing: boolean;
+  isPublic: boolean;
+  maxFileSize: number;
+  allowedFileTypes: string[];
+}
+
+export interface TeamInvitation {
+  id: string;
+  team: Team;
+  email: string;
+  role: 'admin' | 'member' | 'viewer';
+  invitedBy: User;
+  status: 'pending' | 'accepted' | 'rejected' | 'expired';
+  message?: string;
+  expiresAt: string;
+  createdAt: string;
+}
+
+export interface CreateTeamRequest {
+  name: string;
+  description?: string;
+  type: 'personal' | 'departmental' | 'organizational';
+  visibility: 'private' | 'department' | 'organization';
+  maxMembers?: number;
+  settings?: Partial<TeamSettings>;
+}
+
+export interface UpdateTeamRequest {
+  name?: string;
+  description?: string;
+  visibility?: 'private' | 'department' | 'organization';
+  maxMembers?: number;
+  settings?: Partial<TeamSettings>;
+}
+
+export interface InviteToTeamRequest {
+  email: string;
+  role: 'admin' | 'member' | 'viewer';
+  message?: string;
+}
+
+export interface TeamActivity {
+  id: string;
+  team: Team;
+  user: User;
+  action: string;
+  description: string;
+  metadata?: Record<string, any>;
+  createdAt: string;
+}
+
+export interface TeamStats {
+  totalMembers: number;
+  activeMembers: number;
+  pendingInvitations: number;
+  recentActivity: number;
+  storageUsed: number;
+  fileCount: number;
+  collectionCount: number;
+}
+
+export interface TeamAnalytics {
+  teamId: string;
+  memberGrowth: Array<{ date: string; count: number }>;
+  activityTrends: Array<{ date: string; count: number }>;
+  fileUsage: Array<{ type: string; count: number; size: number }>;
+  popularCollections: Array<{ collection: Collection; accessCount: number }>;
+  topContributors: Array<{ user: User; contributionCount: number }>;
 }

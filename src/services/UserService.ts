@@ -75,7 +75,7 @@ export class UserService implements IUserService {
     await this.userRepository.delete(id);
   }
 
-  async inviteUser(email: string, role: 'admin' | 'manager' | 'user' = 'user'): Promise<{ inviteToken: string, expiresAt: string }> {
+  async inviteUser(email: string, role: 'admin' | 'org_admin' | 'team_manager' | 'user' = 'user'): Promise<{ inviteToken: string, expiresAt: string }> {
     const inviteToken = generateId('invite');
     return {
       inviteToken,
@@ -83,7 +83,7 @@ export class UserService implements IUserService {
     };
   }
 
-  async updateUserRole(id: string, role: 'admin' | 'manager' | 'user', actor: AuthUser): Promise<AuthUser | null> {
+  async updateUserRole(id: string, role: 'admin' | 'org_admin' | 'team_manager' | 'user', actor: AuthUser): Promise<AuthUser | null> {
     if (actor.id === id) {
       throw UserError.cannotChangeOwnRole();
     }
@@ -91,7 +91,7 @@ export class UserService implements IUserService {
     if (!user) {
       throw UserError.notFound();
     }
-    if (!['admin', 'manager', 'user'].includes(role)) {
+    if (!['admin', 'org_admin', 'team_manager', 'user'].includes(role)) {
       throw UserError.invalidRole();
     }
     const updatedUser = await this.userRepository.update(id, { role });

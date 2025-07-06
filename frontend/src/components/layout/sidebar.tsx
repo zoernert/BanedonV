@@ -27,6 +27,8 @@ interface NavItem {
   description?: string;
   badge?: string;
   adminOnly?: boolean;
+  managerOnly?: boolean;
+  children?: Omit<NavItem, 'children'>[];
 }
 
 const navigation: NavItem[] = [
@@ -35,6 +37,18 @@ const navigation: NavItem[] = [
     href: '/dashboard',
     icon: Home,
     description: 'Overview and quick actions',
+  },
+  {
+    title: 'Teams',
+    href: '/dashboard/teams',
+    icon: Users,
+    description: 'Manage teams and collaboration',
+    children: [
+      { title: 'My Teams', href: '/dashboard/teams/my', icon: Users },
+      { title: 'Browse Teams', href: '/dashboard/teams/browse', icon: Search },
+      { title: 'Pending Requests', href: '/dashboard/teams/pending', icon: FileText, managerOnly: true },
+      { title: 'Create Team', href: '/dashboard/teams/create', icon: Users }
+    ]
   },
   {
     title: 'Collections',
@@ -57,9 +71,15 @@ const navigation: NavItem[] = [
   {
     title: 'Admin',
     href: '/dashboard/admin',
-    icon: Users,
+    icon: Settings,
     description: 'System administration',
     adminOnly: true,
+    children: [
+      { title: 'Users', href: '/dashboard/admin/users', icon: Users },
+      { title: 'Teams', href: '/dashboard/admin/teams', icon: Users },
+      { title: 'Roles', href: '/dashboard/admin/roles', icon: Settings },
+      { title: 'Analytics', href: '/dashboard/admin/analytics', icon: FileText }
+    ]
   },
 ];
 
@@ -82,8 +102,22 @@ export function Sidebar({ className }: SidebarProps) {
     if (item.adminOnly && !authService.isAdmin()) {
       return false;
     }
+    if (item.managerOnly && !authService.isManager()) {
+      return false;
+    }
     return true;
-  });
+  }).map(item => ({
+    ...item,
+    children: item.children?.filter(child => {
+      if (child.adminOnly && !authService.isAdmin()) {
+        return false;
+      }
+      if (child.managerOnly && !authService.isManager()) {
+        return false;
+      }
+      return true;
+    })
+  }));
 
   const NavContent = () => (
     <div className="flex h-full flex-col">
@@ -122,31 +156,58 @@ export function Sidebar({ className }: SidebarProps) {
       <nav className="flex-1 space-y-2 p-4">
         {filteredNavigation.map((item) => {
           const Icon = item.icon;
-          const isActive = pathname === item.href;
+          const isActive = pathname === item.href || (item.children && item.children.some(child => pathname === child.href));
+          const hasChildren = item.children && item.children.length > 0;
           
           return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground",
-                isActive && "bg-primary text-primary-foreground shadow-sm",
-                isCollapsed && "justify-center"
-              )}
-              onClick={() => setIsMobileOpen(false)}
-            >
-              <Icon className={cn("h-4 w-4", !isCollapsed && "mr-3")} />
-              {!isCollapsed && (
-                <div className="flex flex-1 items-center justify-between">
-                  <span>{item.title}</span>
-                  {item.badge && (
-                    <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
-                      {item.badge}
-                    </span>
-                  )}
+            <div key={item.href} className="space-y-1">
+              <Link
+                href={item.href}
+                className={cn(
+                  "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground",
+                  isActive && "bg-primary text-primary-foreground shadow-sm",
+                  isCollapsed && "justify-center"
+                )}
+                onClick={() => setIsMobileOpen(false)}
+              >
+                <Icon className={cn("h-4 w-4", !isCollapsed && "mr-3")} />
+                {!isCollapsed && (
+                  <div className="flex flex-1 items-center justify-between">
+                    <span>{item.title}</span>
+                    {item.badge && (
+                      <span className="rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                )}
+              </Link>
+              
+              {/* Render children if not collapsed and has children */}
+              {!isCollapsed && hasChildren && item.children && (
+                <div className="ml-4 space-y-1 border-l border-border/40 pl-4">
+                  {item.children.map((child) => {
+                    const ChildIcon = child.icon;
+                    const isChildActive = pathname === child.href;
+                    
+                    return (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className={cn(
+                          "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200 hover:bg-accent hover:text-accent-foreground",
+                          isChildActive && "bg-primary text-primary-foreground shadow-sm"
+                        )}
+                        onClick={() => setIsMobileOpen(false)}
+                      >
+                        <ChildIcon className="h-4 w-4 mr-3" />
+                        <span>{child.title}</span>
+                      </Link>
+                    );
+                  })}
                 </div>
               )}
-            </Link>
+            </div>
           );
         })}
       </nav>
@@ -160,7 +221,7 @@ export function Sidebar({ className }: SidebarProps) {
           {!isCollapsed && (
             <div className="flex flex-col">
               <span className="text-sm font-medium">{user?.name}</span>
-              <span className="text-xs text-muted-foreground capitalize">{user?.role}</span>
+              <span className="text-xs text-muted-foreground">{authService.getRoleDisplayName()}</span>
             </div>
           )}
         </div>

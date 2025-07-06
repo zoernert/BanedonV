@@ -175,7 +175,7 @@ export class AuthMiddleware {
    * Manager or admin middleware
    */
   static managerOrAdmin(req: Request, res: Response, next: NextFunction): void {
-    AuthMiddleware.authorize(['admin', 'manager'])(req, res, next);
+    AuthMiddleware.authorize(['admin', 'team_manager'])(req, res, next);
   }
 
   /**

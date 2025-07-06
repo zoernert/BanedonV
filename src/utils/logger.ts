@@ -3,7 +3,7 @@
  * Comprehensive logging utility for the mock middleware
  */
 
-import winston from 'winston';
+import * as winston from 'winston';
 import { loggingConfig, logLevels, logColors } from '../config/logging';
 
 // Create logs directory if it doesn't exist
@@ -91,7 +91,27 @@ const logger = winston.createLogger({
 // Add colors to winston
 winston.addColors(logColors);
 
+// Allow injection of a custom logger for testing
+let injectedLogger: typeof logger | null = null;
+
+/**
+ * Sets a custom logger instance for testing purposes
+ * @param customLogger - The mock logger to use
+ */
+export const setLogger = (customLogger: typeof logger) => {
+  injectedLogger = customLogger;
+};
+
+/**
+ * Resets the logger to use the default winston logger
+ */
+export const resetLogger = () => {
+  injectedLogger = null;
+};
+
 // Helper functions for structured logging
+const getLogger = () => injectedLogger || logger;
+
 export const logRequest = (req: any, res: any, responseTime: number) => {
   const logData = {
     method: req.method,
@@ -107,9 +127,9 @@ export const logRequest = (req: any, res: any, responseTime: number) => {
   };
 
   if (res.statusCode >= 400) {
-    logger.error('HTTP Request Error', logData);
+    getLogger().error('HTTP Request Error', logData);
   } else {
-    logger.info('HTTP Request', logData);
+    getLogger().info('HTTP Request', logData);
   }
 };
 
@@ -124,7 +144,7 @@ export const logError = (error: Error, context?: any) => {
     timestamp: new Date().toISOString()
   };
 
-  logger.error('Application Error', logData);
+  getLogger().error('Application Error', logData);
 };
 
 export const logPerformance = (operation: string, duration: number, context?: any) => {
@@ -136,7 +156,7 @@ export const logPerformance = (operation: string, duration: number, context?: an
       timestamp: new Date().toISOString()
     };
 
-    logger.warn('Performance Warning', logData);
+    getLogger().warn('Performance Warning', logData);
   }
 };
 
@@ -150,9 +170,9 @@ export const logAuth = (action: string, userId?: string, success: boolean = true
   };
 
   if (success) {
-    logger.info('Authentication Event', logData);
+    getLogger().info('Authentication Event', logData);
   } else {
-    logger.warn('Authentication Failure', logData);
+    getLogger().warn('Authentication Failure', logData);
   }
 };
 
@@ -165,7 +185,7 @@ export const logApiUsage = (endpoint: string, method: string, userId?: string, r
     timestamp: new Date().toISOString()
   };
 
-  logger.info('API Usage', logData);
+  getLogger().info('API Usage', logData);
 };
 
 export const logSecurity = (event: string, severity: 'low' | 'medium' | 'high', context?: any) => {
@@ -176,7 +196,7 @@ export const logSecurity = (event: string, severity: 'low' | 'medium' | 'high', 
     timestamp: new Date().toISOString()
   };
 
-  logger.warn('Security Event', logData);
+  getLogger().warn('Security Event', logData);
 };
 
 export default logger;

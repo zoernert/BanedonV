@@ -147,8 +147,82 @@ class AuthService {
     return this.hasRole('admin');
   }
 
+  isOrgAdmin(): boolean {
+    return this.hasRole('org_admin');
+  }
+
+  isTeamManager(): boolean {
+    return this.hasRole('team_manager');
+  }
+
   isManager(): boolean {
-    return this.hasRole('manager') || this.isAdmin();
+    return this.hasRole('team_manager') || this.hasRole('org_admin') || this.isAdmin();
+  }
+
+  canCreateTeam(teamType: 'personal' | 'departmental' | 'organizational'): boolean {
+    if (this.isAdmin()) return true;
+    
+    switch (teamType) {
+      case 'personal':
+        return true; // All users can create personal teams
+      case 'departmental':
+        return this.isTeamManager() || this.isOrgAdmin();
+      case 'organizational':
+        return this.isOrgAdmin();
+      default:
+        return false;
+    }
+  }
+
+  canManageTeam(team: any): boolean {
+    if (this.isAdmin()) return true;
+    if (team.owner?.id === this.user?.id) return true;
+    
+    // Check if user is a manager of the team
+    if (team.managers?.some((manager: any) => manager.id === this.user?.id)) {
+      return true;
+    }
+    
+    // Check if user is an org admin and team is organizational
+    if (this.isOrgAdmin() && team.type === 'organizational') {
+      return true;
+    }
+    
+    // Check if user is a team manager for departmental teams in their scope
+    if (this.isTeamManager() && team.type === 'departmental') {
+      return this.user?.managedTeams?.includes(team.id) || false;
+    }
+    
+    return false;
+  }
+
+  canApproveTeam(team: any): boolean {
+    if (this.isAdmin()) return true;
+    
+    switch (team.type) {
+      case 'departmental':
+        return this.isTeamManager() || this.isOrgAdmin();
+      case 'organizational':
+        return this.isOrgAdmin();
+      default:
+        return false;
+    }
+  }
+
+  getRoleDisplayName(role?: string): string {
+    const userRole = role || this.user?.role;
+    switch (userRole) {
+      case 'admin':
+        return 'System Administrator';
+      case 'org_admin':
+        return 'Organization Administrator';
+      case 'team_manager':
+        return 'Team Manager';
+      case 'user':
+        return 'User';
+      default:
+        return 'Unknown Role';
+    }
   }
 
   canAccess(resource: string, action: string): boolean {
@@ -163,6 +237,14 @@ class AuthService {
       case 'admin':
         return this.isAdmin();
       case 'billing':
+        return this.isManager();
+      case 'teams':
+        return true; // All users can view teams
+      case 'team_approvals':
+        return this.isManager();
+      case 'org_settings':
+        return this.isOrgAdmin();
+      case 'team_analytics':
         return this.isManager();
       default:
         return true;

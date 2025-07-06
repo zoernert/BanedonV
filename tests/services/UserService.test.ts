@@ -177,7 +177,7 @@ describe('UserService', () => {
   describe('updateUserRole', () => {
     it('should update user role successfully', async () => {
       const userId = 'user_1';
-      const newRole = 'manager';
+      const newRole = 'team_manager';
       
       const updatedUser = await userService.updateUserRole(userId, newRole, mockActor);
       
@@ -187,7 +187,7 @@ describe('UserService', () => {
 
     it('should throw error for non-existent user', async () => {
       const nonExistentId = 'non_existent_user';
-      const newRole = 'manager';
+      const newRole = 'team_manager';
       
       await expect(userService.updateUserRole(nonExistentId, newRole, mockActor))
         .rejects

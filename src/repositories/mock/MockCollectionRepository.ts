@@ -25,7 +25,7 @@ export class MockCollectionRepository implements ICollectionRepository {
           id: 'user_1',
           email: 'sarah.johnson@banedonv.com',
           name: 'Sarah Johnson',
-          role: 'manager' as const,
+          role: 'team_manager' as const,
           avatar: 'https://api.dicebear.com/7.x/initials/svg?seed=SarahJohnson',
           createdAt: new Date(Date.now() - 86400000 * 180).toISOString(),
           updatedAt: new Date().toISOString(),

@@ -178,6 +178,7 @@ export class App {
           `${apiPrefix}/collections`,
           `${apiPrefix}/search`,
           `${apiPrefix}/billing`,
+          `${apiPrefix}/teams`,
           `${apiPrefix}/admin`,
           `${apiPrefix}/integrations`
         ],
