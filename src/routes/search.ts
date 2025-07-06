@@ -17,7 +17,7 @@ const router = Router();
  * Search across all content
  */
 router.get('/', 
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateSearchQuery,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
     const { q: query, type, owner, tags, fileType, dateRange, page, limit, collectionId } = req.query as any;
@@ -170,7 +170,7 @@ router.get('/',
  * Get search filters
  */
 router.get('/filters',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     // In a real app, these would be aggregated from the database
     const mockFilters = {
@@ -194,7 +194,7 @@ router.get('/filters',
  * Get search suggestions
  */
 router.get('/suggestions',
-  AuthMiddleware.authenticate,
+  AuthMiddleware.mockAuthenticate,
   ValidationMiddleware.common.validateSearchSuggestions,
   ErrorMiddleware.asyncHandler(async (req: Request, res: Response) => {
     const { q } = req.query as { q: string };
